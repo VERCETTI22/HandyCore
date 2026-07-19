@@ -18,9 +18,9 @@ import {
 export const business = {
   name: "HandyCore",
   tagline: "Professional Handyman Services in Ottawa",
-  phoneDisplay: "(613) 555-0142",
-  phoneHref: "tel:+16135550142",
-  email: "hello@handycore.ca",
+  phoneDisplay: "(343) 630-1499",
+  phoneHref: "tel:+13436301499",
+  email: "info@handycore.co",
   area: "Ottawa & surrounding areas",
   hours: "Mon–Sat · 8am–8pm",
 };

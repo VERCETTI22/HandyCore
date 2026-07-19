@@ -1,7 +1,7 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 
-/** HandyCore wordmark with a spirit-level bubble mark. */
+/** HandyCore wordmark with a yellow-fist-and-hammer mark. */
 export function Logo({
   tone = "light",
   className,
@@ -11,7 +11,7 @@ export function Logo({
 }) {
   return (
     <span className={cn("inline-flex items-center gap-2.5", className)}>
-      <LevelMark />
+      <HammerMark />
       <span
         className={cn(
           "text-[1.28rem] font-extrabold tracking-[-0.03em]",
@@ -24,7 +24,7 @@ export function Logo({
   );
 }
 
-function LevelMark() {
+function HammerMark() {
   return (
     <svg
       width="34"
@@ -35,13 +35,33 @@ function LevelMark() {
       className="shrink-0"
     >
       <rect width="36" height="36" rx="10" fill="#121212" />
-      {/* spirit-level vial */}
-      <rect x="6.5" y="15" width="23" height="6" rx="3" fill="#ffffff" fillOpacity="0.14" />
-      {/* centre guide lines */}
-      <rect x="15.5" y="14" width="1.4" height="8" rx="0.7" fill="#ffffff" fillOpacity="0.35" />
-      <rect x="19.1" y="14" width="1.4" height="8" rx="0.7" fill="#ffffff" fillOpacity="0.35" />
-      {/* the bubble — perfectly level */}
-      <circle cx="18" cy="18" r="2.7" fill="#F4B400" />
+
+      {/* hammer head (steel) */}
+      <rect x="8" y="6.5" width="20" height="6" rx="2.4" fill="#ccd1d8" />
+      <rect x="8" y="10.2" width="20" height="2.6" rx="1.3" fill="#a7adb5" />
+      {/* claw notch */}
+      <path d="M8 7 L11.6 9.75 L8 12.5 Z" fill="#121212" />
+
+      {/* wooden handle */}
+      <rect x="15.9" y="12" width="4.2" height="18" rx="2.1" fill="#c88a48" />
+      <rect x="17.4" y="12.5" width="1.2" height="17" rx="0.6" fill="#b17a3c" />
+
+      {/* yellow fist */}
+      <g fill="#F4B400">
+        <circle cx="13.6" cy="18.4" r="2.6" />
+        <circle cx="16.7" cy="17.9" r="2.75" />
+        <circle cx="19.8" cy="17.9" r="2.75" />
+        <circle cx="22.9" cy="18.4" r="2.6" />
+        <rect x="11" y="18" width="15.2" height="10.6" rx="4.6" />
+        <rect x="23.8" y="18.8" width="4" height="7" rx="2" />
+      </g>
+      {/* finger + thumb definition */}
+      <g stroke="#d29a00" strokeWidth="1.15" strokeLinecap="round">
+        <path d="M12.6 21.6 H22.6" />
+        <path d="M12.6 24.2 H22.6" />
+        <path d="M12.6 26.8 H22.6" />
+        <path d="M24.3 20.2 V25.4" />
+      </g>
     </svg>
   );
 }

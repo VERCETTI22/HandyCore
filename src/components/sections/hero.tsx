@@ -6,7 +6,7 @@ import { MapPin, Phone, Star, ShieldCheck, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
 import { HeroScene } from "@/components/visuals/hero-scene";
-import { heroStats } from "@/lib/content";
+import { heroStats, business } from "@/lib/content";
 
 const container: Variants = {
   hidden: {},
@@ -72,7 +72,7 @@ export function Hero() {
               <Button href="#contact" size="lg">
                 Get Free Quote
               </Button>
-              <Button href="tel:+16135550142" variant="outline" size="lg">
+              <Button href={business.phoneHref} variant="outline" size="lg">
                 <Phone className="h-4 w-4" />
                 Call Now
               </Button>

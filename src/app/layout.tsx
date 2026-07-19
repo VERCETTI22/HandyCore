@@ -17,7 +17,7 @@ const jetbrainsMono = JetBrains_Mono({
   display: "swap",
 });
 
-const siteUrl = "https://handycore.ca";
+const siteUrl = "https://handycore.co";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
