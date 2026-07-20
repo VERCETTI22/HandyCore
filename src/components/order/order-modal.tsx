@@ -31,6 +31,7 @@ const STEP_LABELS: Record<OrderStep, string> = {
   summary: "Review & confirm",
 };
 const STEP_INDEX: OrderStep[] = ["task", "configure", "details", "summary"];
+const CUSTOM_STEPS: OrderStep[] = ["details", "summary"];
 
 export function OrderModal() {
   const order = useOrder();
@@ -138,8 +139,9 @@ export function OrderModal() {
 /*  Header + progress                                                  */
 /* ------------------------------------------------------------------ */
 function ModalHeader() {
-  const { step, goBack, close } = useOrder();
-  const activeIndex = STEP_INDEX.indexOf(step);
+  const { mode, step, goBack, close } = useOrder();
+  const steps = mode === "custom" ? CUSTOM_STEPS : STEP_INDEX;
+  const activeIndex = steps.indexOf(step);
 
   return (
     <div className="border-b border-line px-5 pt-4 pb-4 sm:px-7">
@@ -165,7 +167,7 @@ function ModalHeader() {
         </button>
       </div>
       <div className="mt-3 flex gap-1.5" aria-hidden>
-        {STEP_INDEX.map((s, i) => (
+        {steps.map((s, i) => (
           <span
             key={s}
             className={cn(
@@ -296,6 +298,7 @@ function ConfigureStep() {
 
 function DetailsStep() {
   const {
+    mode,
     description,
     setDescription,
     contactName,
@@ -303,15 +306,30 @@ function DetailsStep() {
     contact,
     setContact,
   } = useOrder();
+  const isCustom = mode === "custom";
 
   return (
     <div className="flex flex-col gap-6">
+      {isCustom && (
+        <div>
+          <span className="spec-label text-muted">Custom request</span>
+          <h3 className="mt-1 text-xl font-extrabold text-ink">
+            Tell us what you need
+          </h3>
+          <p className="mt-1 text-sm text-muted">
+            Describe the job, add a few photos, and leave your details — we&apos;ll
+            reply with a price and time.
+          </p>
+        </div>
+      )}
       <div>
         <label htmlFor="order-description" className="block font-semibold text-ink">
-          What exactly needs doing?
+          {isCustom ? "What do you need done?" : "What exactly needs doing?"}
         </label>
         <p className="mt-0.5 text-[13px] text-muted">
-          The more detail, the more accurate your quote.
+          {isCustom
+            ? "A short description helps us quote it accurately."
+            : "The more detail, the more accurate your quote."}
         </p>
         <textarea
           id="order-description"
@@ -363,6 +381,7 @@ function DetailsStep() {
 
 function SummaryStep() {
   const {
+    mode,
     category,
     task,
     quantity,
@@ -374,21 +393,32 @@ function SummaryStep() {
     status,
     errorMessage,
   } = useOrder();
-  if (!task) return null;
-  const estimate = estimateFor(task, quantity, pkg);
+  const isCustom = mode === "custom";
+  if (!isCustom && !task) return null;
+  const estimate = task ? estimateFor(task, quantity, pkg) : 0;
   const pkgName = packages.find((p) => p.id === pkg)?.name;
 
   return (
     <div className="flex flex-col gap-5">
       <div className="rounded-2xl border border-line bg-surface p-5">
-        <span className="spec-label text-muted">{category?.title}</span>
-        <h3 className="mt-1 text-lg font-extrabold text-ink">{task.title}</h3>
+        <span className="spec-label text-muted">
+          {isCustom ? "Custom request" : category?.title}
+        </span>
+        <h3 className="mt-1 text-lg font-extrabold text-ink">
+          {isCustom ? "Your request" : task?.title}
+        </h3>
 
         <dl className="mt-4 flex flex-col gap-2.5 text-sm">
-          <Row label="Includes" value={task.includes.join(" · ")} />
-          <Row label="Quantity" value={`${quantity} ${task.unit}${quantity > 1 ? "s" : ""}`} />
-          <Row label="Timing" value={pkgName ?? ""} />
-          {description && <Row label="Notes" value={description} />}
+          {!isCustom && task && (
+            <>
+              <Row label="Includes" value={task.includes.join(" · ")} />
+              <Row label="Quantity" value={`${quantity} ${task.unit}${quantity > 1 ? "s" : ""}`} />
+              <Row label="Timing" value={pkgName ?? ""} />
+            </>
+          )}
+          {(description || isCustom) && (
+            <Row label={isCustom ? "Details" : "Notes"} value={description || "—"} />
+          )}
           <Row label="Contact" value={[contactName, contact].filter(Boolean).join(" · ") || "—"} />
           {photos.length > 0 && <Row label="Photos" value={`${photos.length} attached`} />}
         </dl>
@@ -408,7 +438,7 @@ function SummaryStep() {
         )}
       </div>
 
-      <EstimateBar estimate={estimate} />
+      {!isCustom && <EstimateBar estimate={estimate} />}
 
       {status === "error" && (
         <div className="flex items-start gap-2.5 rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
@@ -425,11 +455,13 @@ function SummaryStep() {
 /* ------------------------------------------------------------------ */
 function ModalFooter() {
   const {
+    mode,
     step,
     task,
     goTo,
     submit,
     status,
+    description,
     contactName,
     contact,
   } = useOrder();
@@ -437,6 +469,8 @@ function ModalFooter() {
   if (step === "task") return null;
 
   const contactValid = contactName.trim().length > 0 && isValidContact(contact);
+  const descValid = mode !== "custom" || description.trim().length >= 10;
+  const canReview = contactValid && descValid;
 
   return (
     <div className="border-t border-line px-5 py-4 sm:px-7">
@@ -452,13 +486,15 @@ function ModalFooter() {
             size="lg"
             className="w-full"
             onClick={() => goTo("summary")}
-            disabled={!contactValid}
+            disabled={!canReview}
           >
             Review order <ArrowRight className="h-4 w-4" />
           </Button>
-          {!contactValid && (
+          {!canReview && (
             <p className="text-center text-xs text-muted">
-              Add your name and a phone number or email so we can reach you.
+              {!descValid
+                ? "Add a short description of the job."
+                : "Add your name and a phone number or email so we can reach you."}
             </p>
           )}
         </div>

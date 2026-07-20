@@ -28,7 +28,7 @@ export const business = {
 /* ---- Navigation --------------------------------------------------- */
 export const navLinks = [
   { label: "Home", href: "#home" },
-  { label: "Services", href: "#services" },
+  { label: "Services & Pricing", href: "#services" },
   { label: "Projects", href: "#projects" },
   { label: "Reviews", href: "#reviews" },
   { label: "FAQ", href: "#faq" },

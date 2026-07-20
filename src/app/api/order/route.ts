@@ -11,6 +11,7 @@ export const runtime = "nodejs";
 
 type IncomingPhoto = { name?: string; type?: string; dataUrl?: string };
 type IncomingOrder = {
+  mode?: string;
   categorySlug?: string;
   taskTitle?: string;
   quantity?: number;
@@ -21,6 +22,8 @@ type IncomingOrder = {
   photos?: IncomingPhoto[];
   hp?: string; // honeypot
 };
+
+type Row = { label: string; value: string };
 
 const ALLOWED_IMAGE = ["image/jpeg", "image/png", "image/webp"];
 const MAX_PHOTOS = 5;
@@ -39,19 +42,9 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: true, delivered: false });
   }
 
-  // --- validation ---------------------------------------------------
-  const category = body.categorySlug ? getCategory(body.categorySlug) : undefined;
-  if (!category) {
-    return NextResponse.json({ error: "Unknown service category." }, { status: 400 });
-  }
-  const task = category.tasks.find((t) => t.title === body.taskTitle);
-  if (!task) {
-    return NextResponse.json({ error: "Unknown task." }, { status: 400 });
-  }
+  const isCustom = body.mode === "custom";
 
-  const quantity = Math.min(50, Math.max(1, Math.round(Number(body.quantity) || 1)));
-  const pkg: PackageId = body.package === "express" ? "express" : "basic";
-
+  // --- shared: contact ----------------------------------------------
   const contactName = (body.contactName ?? "").trim().slice(0, 120);
   const contact = (body.contact ?? "").trim().slice(0, 160);
   if (!contactName || !isValidContact(contact)) {
@@ -60,9 +53,55 @@ export async function POST(request: Request) {
       { status: 400 },
     );
   }
-
   const description = (body.description ?? "").trim().slice(0, 2000);
 
+  // --- task-specific bits -------------------------------------------
+  let subject: string;
+  let title: string;
+  let subtitle: string;
+  const rows: Row[] = [];
+
+  if (isCustom) {
+    if (description.length < 5) {
+      return NextResponse.json(
+        { error: "Please describe what you need done." },
+        { status: 400 },
+      );
+    }
+    subject = "New custom request — HandyCore";
+    title = "Custom request";
+    subtitle = "Something else on the list";
+    rows.push({ label: "Details", value: description });
+  } else {
+    const category = body.categorySlug ? getCategory(body.categorySlug) : undefined;
+    if (!category) {
+      return NextResponse.json({ error: "Unknown service category." }, { status: 400 });
+    }
+    const task = category.tasks.find((t) => t.title === body.taskTitle);
+    if (!task) {
+      return NextResponse.json({ error: "Unknown task." }, { status: 400 });
+    }
+    const quantity = Math.min(50, Math.max(1, Math.round(Number(body.quantity) || 1)));
+    const pkg: PackageId = body.package === "express" ? "express" : "basic";
+    const estimate = estimateFor(task, quantity, pkg);
+    const pkgName = packages.find((p) => p.id === pkg)?.name ?? pkg;
+
+    subject = `New service request — ${task.title}`;
+    title = task.title;
+    subtitle = category.title;
+    rows.push(
+      { label: "Includes", value: task.includes.join(" · ") },
+      { label: "Quantity", value: `${quantity} ${task.unit}${quantity > 1 ? "s" : ""}` },
+      { label: "Timing", value: pkgName },
+      { label: "Estimate", value: `from ${formatCad(estimate)} (indicative)` },
+    );
+    if (description) rows.push({ label: "Notes", value: description });
+  }
+
+  // --- shared: contact rows -----------------------------------------
+  rows.push({ label: "Name", value: contactName }, { label: "Contact", value: contact });
+
+  // --- shared: photos -----------------------------------------------
   const photos = Array.isArray(body.photos) ? body.photos.slice(0, MAX_PHOTOS) : [];
   let totalBase64 = 0;
   const attachments: { filename: string; content: string }[] = [];
@@ -86,21 +125,7 @@ export async function POST(request: Request) {
       content: base64,
     });
   }
-
-  const estimate = estimateFor(task, quantity, pkg);
-  const pkgName = packages.find((p) => p.id === pkg)?.name ?? pkg;
-
-  const summary = {
-    category: category.title,
-    task: task.title,
-    quantity: `${quantity} ${task.unit}${quantity > 1 ? "s" : ""}`,
-    timing: pkgName,
-    estimate: `from ${formatCad(estimate)} (indicative)`,
-    contactName,
-    contact,
-    description: description || "(none)",
-    photoCount: attachments.length,
-  };
+  rows.push({ label: "Photos", value: `${attachments.length} attached` });
 
   // --- delivery -----------------------------------------------------
   const apiKey = process.env.RESEND_API_KEY;
@@ -111,7 +136,14 @@ export async function POST(request: Request) {
     // Email not configured yet — never drop the order silently.
     console.warn(
       "[order] RESEND_API_KEY not set — order NOT emailed. Summary:",
-      JSON.stringify(summary),
+      JSON.stringify({
+        mode: isCustom ? "custom" : "catalog",
+        title,
+        contactName,
+        contact,
+        description: description || "(none)",
+        photoCount: attachments.length,
+      }),
     );
     return NextResponse.json({ ok: true, delivered: false });
   }
@@ -123,8 +155,8 @@ export async function POST(request: Request) {
       from,
       to,
       replyTo: isEmail(contact) ? contact : undefined,
-      subject: `New service request — ${task.title}`,
-      html: buildHtml(summary, task.includes),
+      subject,
+      html: buildHtml(title, subtitle, rows),
       attachments,
     });
     if (error) {
@@ -159,21 +191,8 @@ function sanitizeName(name: string | undefined, i: number, ext: string): string 
   return /\.(jpe?g|png|webp)$/i.test(base) ? base : `${base}.${ext}`;
 }
 
-function buildHtml(
-  s: {
-    category: string;
-    task: string;
-    quantity: string;
-    timing: string;
-    estimate: string;
-    contactName: string;
-    contact: string;
-    description: string;
-    photoCount: number;
-  },
-  includes: string[],
-): string {
-  const row = (label: string, value: string) =>
+function buildHtml(title: string, subtitle: string, rows: Row[]): string {
+  const rowHtml = (label: string, value: string) =>
     `<tr><td style="padding:6px 14px 6px 0;color:#6b6b6b;font-size:13px;white-space:nowrap;vertical-align:top">${escapeHtml(
       label,
     )}</td><td style="padding:6px 0;color:#121212;font-size:14px;font-weight:600">${escapeHtml(
@@ -182,19 +201,13 @@ function buildHtml(
   return `
   <div style="font-family:Arial,Helvetica,sans-serif;max-width:560px;margin:0 auto">
     <div style="background:#121212;color:#fff;border-radius:16px;padding:20px 24px">
-      <div style="font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#f4b400">New service request</div>
-      <div style="font-size:20px;font-weight:800;margin-top:4px">${escapeHtml(s.task)}</div>
+      <div style="font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#f4b400">${escapeHtml(
+        subtitle,
+      )}</div>
+      <div style="font-size:20px;font-weight:800;margin-top:4px">${escapeHtml(title)}</div>
     </div>
     <table style="width:100%;border-collapse:collapse;margin-top:16px">
-      ${row("Category", s.category)}
-      ${row("Includes", includes.join(" · "))}
-      ${row("Quantity", s.quantity)}
-      ${row("Timing", s.timing)}
-      ${row("Estimate", s.estimate)}
-      ${row("Name", s.contactName)}
-      ${row("Contact", s.contact)}
-      ${row("Notes", s.description)}
-      ${row("Photos", String(s.photoCount) + " attached")}
+      ${rows.map((r) => rowHtml(r.label, r.value)).join("")}
     </table>
   </div>`;
 }

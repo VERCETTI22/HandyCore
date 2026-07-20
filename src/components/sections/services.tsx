@@ -8,13 +8,13 @@ import { useOrder } from "@/components/order/order-context";
 import { services } from "@/lib/content";
 
 export function Services() {
-  const { openOrder } = useOrder();
+  const { openOrder, openCustom } = useOrder();
 
   return (
     <section id="services" className="py-24 md:py-32">
       <Container>
         <SectionHeading
-          eyebrow="Services"
+          eyebrow="Services & Pricing"
           title="Handyman services, done right"
           description="The five jobs Ottawa homeowners call me for most. If what you need isn't listed, just ask — odds are it's on my list too."
         />
@@ -55,9 +55,10 @@ export function Services() {
 
           {/* brand CTA card fills the 6th slot */}
           <Reveal delay={2}>
-            <a
-              href="#contact"
-              className="group flex h-full flex-col justify-between rounded-3xl bg-ink p-7 text-white shadow-soft transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1.5 hover:shadow-lift"
+            <button
+              type="button"
+              onClick={openCustom}
+              className="group flex h-full w-full flex-col justify-between rounded-3xl bg-ink p-7 text-left text-white shadow-soft transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1.5 hover:shadow-lift"
             >
               <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-brand text-ink">
                 <Plus className="h-7 w-7" strokeWidth={2} />
@@ -73,7 +74,7 @@ export function Services() {
                   <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                 </span>
               </div>
-            </a>
+            </button>
           </Reveal>
         </div>
       </Container>

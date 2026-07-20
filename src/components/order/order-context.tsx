@@ -21,8 +21,11 @@ export type OrderPhoto = {
   file: File;
 };
 
+export type OrderMode = "catalog" | "custom";
+
 type OrderState = {
   isOpen: boolean;
+  mode: OrderMode;
   step: OrderStep;
   category: OrderCategory | null;
   taskIndex: number | null;
@@ -39,6 +42,7 @@ type OrderState = {
 type OrderContextValue = OrderState & {
   task: OrderTask | null;
   openOrder: (slug: string) => void;
+  openCustom: () => void;
   close: () => void;
   goBack: () => void;
   selectTask: (index: number) => void;
@@ -56,6 +60,7 @@ type OrderContextValue = OrderState & {
 
 const initialState: OrderState = {
   isOpen: false,
+  mode: "catalog",
   step: "task",
   category: null,
   taskIndex: null,
@@ -77,7 +82,12 @@ export function useOrder() {
   return ctx;
 }
 
-const STEP_ORDER: OrderStep[] = ["task", "configure", "details", "summary"];
+const STEP_ORDER_CATALOG: OrderStep[] = ["task", "configure", "details", "summary"];
+const STEP_ORDER_CUSTOM: OrderStep[] = ["details", "summary"];
+
+function stepsForMode(mode: OrderMode): OrderStep[] {
+  return mode === "custom" ? STEP_ORDER_CUSTOM : STEP_ORDER_CATALOG;
+}
 
 export function OrderProvider({ children }: { children: React.ReactNode }) {
   const [state, setState] = React.useState<OrderState>(initialState);
@@ -101,7 +111,11 @@ export function OrderProvider({ children }: { children: React.ReactNode }) {
 
   const openOrder = React.useCallback((slug: string) => {
     const category = getCategory(slug) ?? null;
-    setState({ ...initialState, isOpen: true, category, step: "task" });
+    setState({ ...initialState, isOpen: true, mode: "catalog", category, step: "task" });
+  }, []);
+
+  const openCustom = React.useCallback(() => {
+    setState({ ...initialState, isOpen: true, mode: "custom", step: "details" });
   }, []);
 
   const close = React.useCallback(() => {
@@ -119,9 +133,10 @@ export function OrderProvider({ children }: { children: React.ReactNode }) {
 
   const goBack = React.useCallback(() => {
     setState((s) => {
-      const i = STEP_ORDER.indexOf(s.step);
+      const order = stepsForMode(s.mode);
+      const i = order.indexOf(s.step);
       if (i <= 0) return { ...s, isOpen: false };
-      return { ...s, step: STEP_ORDER[i - 1] };
+      return { ...s, step: order[i - 1] };
     });
   }, []);
 
@@ -177,6 +192,7 @@ export function OrderProvider({ children }: { children: React.ReactNode }) {
       );
 
       const payload = {
+        mode: snapshot.mode,
         categorySlug: snapshot.category?.slug ?? "",
         taskTitle: selected?.title ?? "",
         quantity: snapshot.quantity,
@@ -216,6 +232,7 @@ export function OrderProvider({ children }: { children: React.ReactNode }) {
     ...state,
     task,
     openOrder,
+    openCustom,
     close,
     goBack,
     selectTask,
