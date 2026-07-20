@@ -2,13 +2,8 @@ import { Phone, Mail, Clock, MapPin } from "lucide-react";
 import { Container } from "@/components/ui/container";
 import { Reveal } from "@/components/ui/reveal";
 import { Button } from "@/components/ui/button";
+import { ContactModalButton } from "@/components/ui/contact-modal";
 import { business } from "@/lib/content";
-
-const mailto = `mailto:${business.email}?subject=${encodeURIComponent(
-  "Free quote request — HandyCore",
-)}&body=${encodeURIComponent(
-  "Hi, I'd like a free quote.\n\nWhat I need done:\n\nMy address / neighbourhood:\n\nPreferred day/time:\n",
-)}`;
 
 export function Cta() {
   return (
@@ -39,9 +34,9 @@ export function Cta() {
           </Reveal>
           <Reveal delay={3}>
             <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
-              <Button href={mailto} variant="dark" size="lg">
+              <ContactModalButton variant="dark" size="lg">
                 Get Free Quote
-              </Button>
+              </ContactModalButton>
               <Button
                 href={business.phoneHref}
                 variant="outline"

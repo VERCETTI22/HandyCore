@@ -6,7 +6,8 @@ import { MapPin, Phone, Star, ShieldCheck, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
 import { HeroScene } from "@/components/visuals/hero-scene";
-import { heroStats, business } from "@/lib/content";
+import { useContactModal } from "@/components/ui/contact-modal";
+import { heroStats } from "@/lib/content";
 
 const container: Variants = {
   hidden: {},
@@ -19,6 +20,8 @@ const item: Variants = {
 };
 
 export function Hero() {
+  const { openContactModal } = useContactModal();
+
   return (
     <section
       id="home"
@@ -69,10 +72,10 @@ export function Hero() {
             </motion.p>
 
             <motion.div variants={item} className="mt-8 flex flex-wrap items-center gap-3">
-              <Button href="#contact" size="lg">
+              <Button size="lg" onClick={openContactModal}>
                 Get Free Quote
               </Button>
-              <Button href={business.phoneHref} variant="outline" size="lg">
+              <Button variant="outline" size="lg" onClick={openContactModal}>
                 <Phone className="h-4 w-4" />
                 Call Now
               </Button>

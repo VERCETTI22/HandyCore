@@ -6,12 +6,14 @@ import { Menu, X, Phone } from "lucide-react";
 import { Logo } from "@/components/ui/logo";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
+import { useContactModal } from "@/components/ui/contact-modal";
 import { navLinks, business } from "@/lib/content";
 import { cn } from "@/lib/utils";
 
 export function Navbar() {
   const [scrolled, setScrolled] = React.useState(false);
   const [open, setOpen] = React.useState(false);
+  const { openContactModal } = useContactModal();
 
   React.useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -66,7 +68,11 @@ export function Navbar() {
 
         {/* right — CTA + mobile toggle */}
         <div className="flex items-center justify-self-end gap-2">
-          <Button href="#contact" size="md" className="hidden sm:inline-flex">
+          <Button
+            size="md"
+            className="hidden sm:inline-flex"
+            onClick={openContactModal}
+          >
             Get Free Quote
           </Button>
           <button
@@ -112,7 +118,13 @@ export function Navbar() {
                 ))}
               </ul>
               <div className="mt-4 flex flex-col gap-3 border-t border-line pt-5">
-                <Button href="#contact" size="lg" onClick={() => setOpen(false)}>
+                <Button
+                  size="lg"
+                  onClick={() => {
+                    setOpen(false);
+                    openContactModal();
+                  }}
+                >
                   Get Free Quote
                 </Button>
                 <Button href={business.phoneHref} variant="outline" size="lg">
