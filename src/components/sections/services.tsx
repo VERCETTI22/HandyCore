@@ -4,9 +4,12 @@ import { ArrowUpRight, Plus } from "lucide-react";
 import { Container } from "@/components/ui/container";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { Reveal } from "@/components/ui/reveal";
+import { useOrder } from "@/components/order/order-context";
 import { services } from "@/lib/content";
 
 export function Services() {
+  const { openOrder } = useOrder();
+
   return (
     <section id="services" className="py-24 md:py-32">
       <Container>
@@ -21,9 +24,10 @@ export function Services() {
             const Icon = service.icon;
             return (
               <Reveal key={service.title} delay={i % 3}>
-                <a
-                  href="#contact"
-                  className="group relative flex h-full flex-col rounded-3xl border border-line bg-paper p-7 shadow-soft transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1.5 hover:border-brand/40 hover:shadow-lift"
+                <button
+                  type="button"
+                  onClick={() => openOrder(service.slug)}
+                  className="group relative flex h-full w-full flex-col rounded-3xl border border-line bg-paper p-7 text-left shadow-soft transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1.5 hover:border-brand/40 hover:shadow-lift"
                 >
                   <span className="spec-label absolute right-6 top-7 text-faint">
                     {service.index}
@@ -44,7 +48,7 @@ export function Services() {
                     </span>
                     <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-brand-700" />
                   </span>
-                </a>
+                </button>
               </Reveal>
             );
           })}

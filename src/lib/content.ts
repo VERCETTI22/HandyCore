@@ -48,6 +48,8 @@ export type Service = {
   title: string;
   blurb: string;
   index: string;
+  /** matches a slug in order-catalog.ts to open the ordering flow */
+  slug: string;
 };
 
 export const services: Service[] = [
@@ -56,30 +58,35 @@ export const services: Service[] = [
     title: "Furniture Assembly",
     blurb: "Flat-pack, wardrobes and shelving built solid, square and level.",
     index: "01",
+    slug: "furniture-assembly",
   },
   {
     icon: PaintRoller,
     title: "Painting",
     blurb: "Clean lines, even coats and tidy edges — rooms that look new.",
     index: "02",
+    slug: "painting",
   },
   {
     icon: DoorClosed,
     title: "Door Repair",
     blurb: "Sticking, sagging or squeaking doors adjusted and made right.",
     index: "03",
+    slug: "door-repair",
   },
   {
     icon: Tv,
     title: "TV Mounting",
     blurb: "Securely mounted, cables tucked away, perfectly straight.",
     index: "04",
+    slug: "tv-mounting",
   },
   {
     icon: Wrench,
     title: "General Repairs",
     blurb: "The odd jobs and small fixes that never seem to get done.",
     index: "05",
+    slug: "general-repairs",
   },
 ];
 
