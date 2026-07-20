@@ -42,7 +42,7 @@ export function TvWallScene({
           {/* wall-mounted flat TV */}
           <rect x="300" y="118" width="300" height="180" rx="12" fill="#121212" />
           <rect x="312" y="130" width="276" height="156" rx="6" fill="#1b1b1b" />
-          <path d="M330 150 L400 262" stroke="#d9a64e" strokeWidth="6" opacity="0.25" strokeLinecap="round" />
+          <path d="M330 150 L400 262" stroke="#F4B400" strokeWidth="6" opacity="0.25" strokeLinecap="round" />
           {/* soundbar */}
           <rect x="336" y="312" width="228" height="16" rx="8" fill="#1b1b1b" />
           {/* floating console */}
@@ -53,11 +53,11 @@ export function TvWallScene({
           <circle cx="462" cy="414" r="4" fill="#121212" />
           {/* styling on console */}
           <rect x="286" y="342" width="12" height="30" rx="2" fill="#121212" />
-          <rect x="300" y="348" width="12" height="24" rx="2" fill="#d9a64e" />
+          <rect x="300" y="348" width="12" height="24" rx="2" fill="#F4B400" />
           <g>
             <path d="M600 372 h34 l-6 -34 h-22 z" fill="#121212" />
             <path d="M617 338 C 606 320 604 306 620 296 C 624 316 626 328 617 338 Z" fill="#1c1c1c" />
-            <path d="M617 338 C 628 320 630 306 614 296 C 610 316 608 328 617 338 Z" fill="#d9a64e" />
+            <path d="M617 338 C 628 320 630 306 614 296 C 610 316 608 328 617 338 Z" fill="#F4B400" />
           </g>
         </g>
       ) : (

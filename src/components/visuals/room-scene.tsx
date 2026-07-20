@@ -66,7 +66,7 @@ export function RoomScene({
           <g>
             <rect x="128" y="118" width="104" height="132" rx="6" fill="#ffffff" />
             <rect x="128" y="118" width="104" height="132" rx="6" fill="none" stroke="#121212" strokeWidth="4" />
-            <rect x="144" y="134" width="72" height="100" rx="3" fill="#d9a64e" opacity="0.9" />
+            <rect x="144" y="134" width="72" height="100" rx="3" fill="#F4B400" opacity="0.9" />
           </g>
           <g>
             <rect x="252" y="140" width="120" height="88" rx="6" fill="#ffffff" />
@@ -79,9 +79,9 @@ export function RoomScene({
             <rect x="406" y="132" width="64" height="42" rx="3" fill="#efe9dd" />
           </g>
           {/* wall sconce with warm glow */}
-          <circle cx="512" cy="150" r="30" fill="#d9a64e" opacity="0.16" />
+          <circle cx="512" cy="150" r="30" fill="#F4B400" opacity="0.16" />
           <rect x="506" y="150" width="12" height="34" rx="4" fill="#121212" />
-          <circle cx="512" cy="146" r="7" fill="#d9a64e" />
+          <circle cx="512" cy="146" r="7" fill="#F4B400" />
         </g>
       )}
 
@@ -94,7 +94,7 @@ export function RoomScene({
             <path d="M808 400 C 846 360 858 330 824 300 C 816 348 798 372 808 400 Z" />
             <path d="M808 400 C 792 350 788 320 808 296 C 820 340 818 372 808 400 Z" />
           </g>
-          <g fill="#d9a64e" opacity="0.9">
+          <g fill="#F4B400" opacity="0.9">
             <path d="M808 400 C 786 372 782 352 802 336 C 808 360 816 384 808 400 Z" />
           </g>
         </g>
@@ -115,7 +115,7 @@ export function RoomScene({
         </g>
       ) : (
         // after: a soft rug for warmth
-        <ellipse cx="300" cy="540" rx="210" ry="26" fill="#faf3e3" />
+        <ellipse cx="300" cy="540" rx="210" ry="26" fill="#fff6de" />
       )}
     </svg>
   );

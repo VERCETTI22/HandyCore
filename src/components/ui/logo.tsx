@@ -1,85 +1,66 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 
-/** Claw-hammer head silhouette (claw hooks up-left, face drops down). */
-const HEAD_PATH =
-  "M16.5 15 C13.5 13.5 10.5 11 7.5 10 C5.5 9.4 3.2 10.2 3 12.2 C2.85 13.9 4.3 14.7 5.8 15.1 C8 15.7 9.6 16.8 10.6 18.2 L10.6 27 C10.6 29.4 12 31 14.2 31 L16.5 31 Z";
-
-const GOLD = "#d9a64e";
-
-/**
- * HandyCore lockup: an "H" crossed by a gold hammer, plus the wordmark.
- * Colours adapt so the mark reads on both light and dark surfaces.
- */
+/** HandyCore wordmark with a yellow-fist-and-hammer mark. */
 export function Logo({
   tone = "light",
-  withTagline = false,
   className,
 }: {
   tone?: "light" | "dark";
-  withTagline?: boolean;
   className?: string;
 }) {
-  const isDark = tone === "dark";
-
   return (
     <span className={cn("inline-flex items-center gap-2.5", className)}>
-      <HammerH
-        letter={isDark ? "#ffffff" : "#0f0f0f"}
-        outline={isDark ? "#0f0f0f" : "#ffffff"}
-      />
-      <span className="flex flex-col leading-none">
-        <span
-          className={cn(
-            "text-[1.3rem] font-extrabold tracking-[-0.02em]",
-            isDark ? "text-white" : "text-ink",
-          )}
-        >
-          Handy
-          <span className={isDark ? "text-brand" : "text-brand-700"}>Core</span>
-        </span>
-        {withTagline && (
-          <span
-            className={cn(
-              "mt-2 text-[0.5rem] font-semibold uppercase tracking-[0.22em]",
-              isDark ? "text-white/50" : "text-muted",
-            )}
-          >
-            Reliable. Skilled. Dependable.
-          </span>
+      <HammerMark />
+      <span
+        className={cn(
+          "text-[1.28rem] font-extrabold tracking-[-0.03em]",
+          tone === "dark" ? "text-white" : "text-ink",
         )}
+      >
+        Handy<span className="text-brand-700">Core</span>
       </span>
     </span>
   );
 }
 
-function HammerH({ letter, outline }: { letter: string; outline: string }) {
+function HammerMark() {
   return (
     <svg
-      width="40"
-      height="38"
-      viewBox="0 0 42 40"
+      width="34"
+      height="34"
+      viewBox="0 0 36 36"
       fill="none"
       aria-hidden="true"
       className="shrink-0"
     >
-      {/* the H */}
-      <g fill={letter}>
-        <rect x="12" y="2" width="8" height="36" rx="1" />
-        <rect x="30" y="2" width="8" height="36" rx="1" />
-        <rect x="12" y="16.4" width="26" height="7.2" />
-      </g>
+      <rect width="36" height="36" rx="10" fill="#121212" />
 
-      {/* separation halo so the hammer reads on top of the H */}
-      <g fill={outline} stroke={outline} strokeWidth="3.2" strokeLinejoin="round">
-        <path d={HEAD_PATH} />
-        <rect x="14" y="18.2" width="25" height="5.6" rx="2.8" />
-      </g>
+      {/* hammer head (steel) */}
+      <rect x="8" y="6.5" width="20" height="6" rx="2.4" fill="#ccd1d8" />
+      <rect x="8" y="10.2" width="20" height="2.6" rx="1.3" fill="#a7adb5" />
+      {/* claw notch */}
+      <path d="M8 7 L11.6 9.75 L8 12.5 Z" fill="#121212" />
 
-      {/* the hammer */}
-      <g fill={GOLD}>
-        <path d={HEAD_PATH} />
-        <rect x="14" y="18.2" width="25" height="5.6" rx="2.8" />
+      {/* wooden handle */}
+      <rect x="15.9" y="12" width="4.2" height="18" rx="2.1" fill="#c88a48" />
+      <rect x="17.4" y="12.5" width="1.2" height="17" rx="0.6" fill="#b17a3c" />
+
+      {/* yellow fist */}
+      <g fill="#F4B400">
+        <circle cx="13.6" cy="18.4" r="2.6" />
+        <circle cx="16.7" cy="17.9" r="2.75" />
+        <circle cx="19.8" cy="17.9" r="2.75" />
+        <circle cx="22.9" cy="18.4" r="2.6" />
+        <rect x="11" y="18" width="15.2" height="10.6" rx="4.6" />
+        <rect x="23.8" y="18.8" width="4" height="7" rx="2" />
+      </g>
+      {/* finger + thumb definition */}
+      <g stroke="#d29a00" strokeWidth="1.15" strokeLinecap="round">
+        <path d="M12.6 21.6 H22.6" />
+        <path d="M12.6 24.2 H22.6" />
+        <path d="M12.6 26.8 H22.6" />
+        <path d="M24.3 20.2 V25.4" />
       </g>
     </svg>
   );

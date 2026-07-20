@@ -5,15 +5,15 @@
 /*  Palette + type + radius + soft-shadow system for the whole site.  */
 /* ------------------------------------------------------------------ */
 @theme {
-  /* Brand + surfaces — gold / black / white, taken from the logo */
-  --color-brand: #d9a64e;
-  --color-brand-600: #c69340;
-  --color-brand-700: #9c7529;
-  --color-brand-tint: #faf3e3;
+  /* Brand + surfaces */
+  --color-brand: #f4b400;
+  --color-brand-600: #e3a500;
+  --color-brand-700: #c88f00;
+  --color-brand-tint: #fff6de;
 
-  --color-ink: #0f0f0f;
-  --color-ink-800: #171717;
-  --color-ink-700: #262626;
+  --color-ink: #121212;
+  --color-ink-800: #1b1b1b;
+  --color-ink-700: #2a2a2a;
 
   --color-paper: #ffffff;
   --color-surface: #f8f8f8;
@@ -27,7 +27,8 @@
   --color-line-strong: #e0e0e0;
 
   /* Type */
-  --font-sans: var(--font-montserrat), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, "SFMono-Regular", monospace;
 
   /* Radius — brief calls for 16–24px */
   --radius-xl: 14px;
@@ -38,7 +39,7 @@
   /* Soft shadow system */
   --shadow-soft: 0 1px 2px rgba(18, 18, 18, 0.04), 0 10px 30px rgba(18, 18, 18, 0.06);
   --shadow-lift: 0 2px 6px rgba(18, 18, 18, 0.05), 0 24px 48px rgba(18, 18, 18, 0.12);
-  --shadow-brand: 0 8px 24px rgba(217, 166, 78, 0.32);
+  --shadow-brand: 0 8px 24px rgba(244, 180, 0, 0.28);
 
   /* Easing */
   --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
@@ -60,6 +61,7 @@
     background: var(--color-paper);
     color: var(--color-text);
     font-family: var(--font-sans);
+    font-feature-settings: "ss01", "cv11";
     letter-spacing: -0.011em;
     overflow-x: clip; /* stop horizontal overflow without creating a scroll container */
   }
@@ -101,13 +103,13 @@
 /*  Utilities                                                         */
 /* ------------------------------------------------------------------ */
 @layer utilities {
-  /* tracked caps label — matches the logo tagline lockup */
+  /* mono spec-label used across section eyebrows */
   .spec-label {
-    font-family: var(--font-sans);
+    font-family: var(--font-mono);
     font-size: 0.72rem;
-    letter-spacing: 0.22em;
+    letter-spacing: 0.18em;
     text-transform: uppercase;
-    font-weight: 600;
+    font-weight: 500;
   }
 
   /* fine hairline blueprint grid for dark sections */
