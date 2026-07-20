@@ -12,7 +12,7 @@ export function Footer() {
         <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1.2fr]">
           {/* brand */}
           <div>
-            <Logo tone="dark" />
+            <Logo tone="dark" withTagline />
             <p className="mt-5 max-w-xs text-sm leading-relaxed text-white/55">
               Professional handyman services for Ottawa homeowners. One trusted local
               pro — insured, punctual, and genuinely proud of the work.
