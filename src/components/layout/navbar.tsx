@@ -45,7 +45,7 @@ export function Navbar() {
           aria-label="HandyCore home"
           onClick={() => setOpen(false)}
         >
-          <Logo />
+          <Logo priority />
         </a>
 
         {/* center — nav */}
