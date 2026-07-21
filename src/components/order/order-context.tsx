@@ -33,7 +33,8 @@ type OrderState = {
   pkg: PackageId;
   description: string;
   contactName: string;
-  contact: string; // phone or email
+  phone: string;
+  email: string;
   photos: OrderPhoto[];
   status: SubmitStatus;
   errorMessage: string;
@@ -50,7 +51,8 @@ type OrderContextValue = OrderState & {
   setPackage: (p: PackageId) => void;
   setDescription: (v: string) => void;
   setContactName: (v: string) => void;
-  setContact: (v: string) => void;
+  setPhone: (v: string) => void;
+  setEmail: (v: string) => void;
   addPhotos: (photos: OrderPhoto[]) => void;
   removePhoto: (id: string) => void;
   goTo: (step: OrderStep) => void;
@@ -68,7 +70,8 @@ const initialState: OrderState = {
   pkg: "basic",
   description: "",
   contactName: "",
-  contact: "",
+  phone: "",
+  email: "",
   photos: [],
   status: "idle",
   errorMessage: "",
@@ -160,8 +163,12 @@ export function OrderProvider({ children }: { children: React.ReactNode }) {
     setState((s) => ({ ...s, contactName: v.slice(0, 120) }));
   }, []);
 
-  const setContact = React.useCallback((v: string) => {
-    setState((s) => ({ ...s, contact: v.slice(0, 160) }));
+  const setPhone = React.useCallback((v: string) => {
+    setState((s) => ({ ...s, phone: v.slice(0, 40) }));
+  }, []);
+
+  const setEmail = React.useCallback((v: string) => {
+    setState((s) => ({ ...s, email: v.slice(0, 160) }));
   }, []);
 
   const addPhotos = React.useCallback((photos: OrderPhoto[]) => {
@@ -199,7 +206,8 @@ export function OrderProvider({ children }: { children: React.ReactNode }) {
         package: snapshot.pkg,
         description: snapshot.description,
         contactName: snapshot.contactName,
-        contact: snapshot.contact,
+        phone: snapshot.phone,
+        email: snapshot.email,
         photos: photoPayload,
         hp: "", // honeypot — real users leave this empty
       };
@@ -240,7 +248,8 @@ export function OrderProvider({ children }: { children: React.ReactNode }) {
     setPackage,
     setDescription,
     setContactName,
-    setContact,
+    setPhone,
+    setEmail,
     addPhotos,
     removePhoto,
     goTo,

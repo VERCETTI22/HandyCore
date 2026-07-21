@@ -303,8 +303,10 @@ function DetailsStep() {
     setDescription,
     contactName,
     setContactName,
-    contact,
-    setContact,
+    phone,
+    setPhone,
+    email,
+    setEmail,
   } = useOrder();
   const isCustom = mode === "custom";
 
@@ -349,30 +351,54 @@ function DetailsStep() {
         <PhotoUploader />
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-2">
-        <div>
-          <label htmlFor="order-name" className="block text-sm font-semibold text-ink">
-            Your name
-          </label>
-          <input
-            id="order-name"
-            value={contactName}
-            onChange={(e) => setContactName(e.target.value)}
-            placeholder="First name"
-            className="mt-2 w-full rounded-xl border border-line bg-surface px-4 py-3 text-sm text-ink outline-none transition-colors placeholder:text-faint focus:border-brand focus:bg-paper"
-          />
-        </div>
-        <div>
-          <label htmlFor="order-contact" className="block text-sm font-semibold text-ink">
-            Phone or email
-          </label>
-          <input
-            id="order-contact"
-            value={contact}
-            onChange={(e) => setContact(e.target.value)}
-            placeholder="So we can reach you"
-            className="mt-2 w-full rounded-xl border border-line bg-surface px-4 py-3 text-sm text-ink outline-none transition-colors placeholder:text-faint focus:border-brand focus:bg-paper"
-          />
+      <div>
+        <span className="block font-semibold text-ink">Your details</span>
+        <p className="mt-0.5 mb-3 text-[13px] text-muted">
+          We&apos;ll use these to send your quote and confirm the booking.
+        </p>
+        <div className="grid gap-3 sm:grid-cols-2">
+          <div className="sm:col-span-2">
+            <label htmlFor="order-name" className="block text-sm font-semibold text-ink">
+              Your name
+            </label>
+            <input
+              id="order-name"
+              value={contactName}
+              onChange={(e) => setContactName(e.target.value)}
+              placeholder="First name"
+              className="mt-2 w-full rounded-xl border border-line bg-surface px-4 py-3 text-sm text-ink outline-none transition-colors placeholder:text-faint focus:border-brand focus:bg-paper"
+            />
+          </div>
+          <div>
+            <label htmlFor="order-phone" className="block text-sm font-semibold text-ink">
+              Phone
+            </label>
+            <input
+              id="order-phone"
+              type="tel"
+              inputMode="tel"
+              autoComplete="tel"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              placeholder="(343) 555-0123"
+              className="mt-2 w-full rounded-xl border border-line bg-surface px-4 py-3 text-sm text-ink outline-none transition-colors placeholder:text-faint focus:border-brand focus:bg-paper"
+            />
+          </div>
+          <div>
+            <label htmlFor="order-email" className="block text-sm font-semibold text-ink">
+              Email
+            </label>
+            <input
+              id="order-email"
+              type="email"
+              inputMode="email"
+              autoComplete="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="you@email.com"
+              className="mt-2 w-full rounded-xl border border-line bg-surface px-4 py-3 text-sm text-ink outline-none transition-colors placeholder:text-faint focus:border-brand focus:bg-paper"
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -388,7 +414,8 @@ function SummaryStep() {
     pkg,
     description,
     contactName,
-    contact,
+    phone,
+    email,
     photos,
     status,
     errorMessage,
@@ -419,7 +446,9 @@ function SummaryStep() {
           {(description || isCustom) && (
             <Row label={isCustom ? "Details" : "Notes"} value={description || "—"} />
           )}
-          <Row label="Contact" value={[contactName, contact].filter(Boolean).join(" · ") || "—"} />
+          <Row label="Name" value={contactName || "—"} />
+          <Row label="Phone" value={phone || "—"} />
+          <Row label="Email" value={email || "—"} />
           {photos.length > 0 && <Row label="Photos" value={`${photos.length} attached`} />}
         </dl>
 
@@ -463,12 +492,14 @@ function ModalFooter() {
     status,
     description,
     contactName,
-    contact,
+    phone,
+    email,
   } = useOrder();
 
   if (step === "task") return null;
 
-  const contactValid = contactName.trim().length > 0 && isValidContact(contact);
+  const contactValid =
+    contactName.trim().length > 0 && isValidPhone(phone) && isValidEmail(email);
   const descValid = mode !== "custom" || description.trim().length >= 10;
   const canReview = contactValid && descValid;
 
@@ -494,7 +525,7 @@ function ModalFooter() {
             <p className="text-center text-xs text-muted">
               {!descValid
                 ? "Add a short description of the job."
-                : "Add your name and a phone number or email so we can reach you."}
+                : "Add your name, phone and email so we can reach you."}
             </p>
           )}
         </div>
@@ -649,10 +680,9 @@ function Row({ label, value }: { label: string; value: string }) {
   );
 }
 
-function isValidContact(v: string): boolean {
-  const t = v.trim();
-  if (t.length < 5) return false;
-  const email = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(t);
-  const phone = /[0-9]/.test(t) && t.replace(/[^0-9]/g, "").length >= 7;
-  return email || phone;
+function isValidEmail(v: string): boolean {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
+}
+function isValidPhone(v: string): boolean {
+  return v.replace(/[^0-9]/g, "").length >= 7;
 }

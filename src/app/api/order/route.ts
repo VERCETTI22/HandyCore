@@ -18,7 +18,8 @@ type IncomingOrder = {
   package?: string;
   description?: string;
   contactName?: string;
-  contact?: string;
+  phone?: string;
+  email?: string;
   photos?: IncomingPhoto[];
   hp?: string; // honeypot
 };
@@ -29,7 +30,43 @@ const ALLOWED_IMAGE = ["image/jpeg", "image/png", "image/webp"];
 const MAX_PHOTOS = 5;
 const MAX_TOTAL_BASE64 = 9 * 1024 * 1024; // ~9MB of base64 across all photos
 
+/* ------------------------------------------------------------------ */
+/*  Best-effort rate limit (per serverless instance, in memory).       */
+/*  Generous enough that a real customer never hits it, but a burst of  */
+/*  bot submissions from one IP gets throttled. Honeypot is the main    */
+/*  bot filter; this is a second, cheap layer.                          */
+/* ------------------------------------------------------------------ */
+const RL_WINDOW_MS = 10 * 60 * 1000; // 10 minutes
+const RL_MAX = 6; // requests per window per IP
+const rlHits = new Map<string, number[]>();
+
+function isRateLimited(ip: string): boolean {
+  const now = Date.now();
+  const recent = (rlHits.get(ip) ?? []).filter((t) => now - t < RL_WINDOW_MS);
+  recent.push(now);
+  rlHits.set(ip, recent);
+  if (rlHits.size > 5000) {
+    for (const [key, times] of rlHits) {
+      if (times.every((t) => now - t >= RL_WINDOW_MS)) rlHits.delete(key);
+    }
+  }
+  return recent.length > RL_MAX;
+}
+
+function clientIp(request: Request): string {
+  const fwd = request.headers.get("x-forwarded-for");
+  if (fwd) return fwd.split(",")[0].trim();
+  return request.headers.get("x-real-ip") || "unknown";
+}
+
 export async function POST(request: Request) {
+  if (isRateLimited(clientIp(request))) {
+    return NextResponse.json(
+      { error: "Too many requests. Please try again in a few minutes." },
+      { status: 429 },
+    );
+  }
+
   let body: IncomingOrder;
   try {
     body = (await request.json()) as IncomingOrder;
@@ -46,10 +83,11 @@ export async function POST(request: Request) {
 
   // --- shared: contact ----------------------------------------------
   const contactName = (body.contactName ?? "").trim().slice(0, 120);
-  const contact = (body.contact ?? "").trim().slice(0, 160);
-  if (!contactName || !isValidContact(contact)) {
+  const phone = (body.phone ?? "").trim().slice(0, 40);
+  const email = (body.email ?? "").trim().slice(0, 160);
+  if (!contactName || !isValidPhone(phone) || !isValidEmail(email)) {
     return NextResponse.json(
-      { error: "Please include your name and a phone number or email." },
+      { error: "Please include your name, phone and email." },
       { status: 400 },
     );
   }
@@ -99,7 +137,11 @@ export async function POST(request: Request) {
   }
 
   // --- shared: contact rows -----------------------------------------
-  rows.push({ label: "Name", value: contactName }, { label: "Contact", value: contact });
+  rows.push(
+    { label: "Name", value: contactName },
+    { label: "Phone", value: phone },
+    { label: "Email", value: email },
+  );
 
   // --- shared: photos -----------------------------------------------
   const photos = Array.isArray(body.photos) ? body.photos.slice(0, MAX_PHOTOS) : [];
@@ -140,7 +182,8 @@ export async function POST(request: Request) {
         mode: isCustom ? "custom" : "catalog",
         title,
         contactName,
-        contact,
+        phone,
+        email,
         description: description || "(none)",
         photoCount: attachments.length,
       }),
@@ -154,7 +197,7 @@ export async function POST(request: Request) {
     const { error } = await resend.emails.send({
       from,
       to,
-      replyTo: isEmail(contact) ? contact : undefined,
+      replyTo: email,
       subject,
       html: buildHtml(title, subtitle, rows),
       attachments,
@@ -177,14 +220,11 @@ export async function POST(request: Request) {
 }
 
 /* ---- helpers ------------------------------------------------------ */
-function isEmail(v: string): boolean {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+function isValidEmail(v: string): boolean {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
 }
-function isValidContact(v: string): boolean {
-  const t = v.trim();
-  if (t.length < 5) return false;
-  if (isEmail(t)) return true;
-  return t.replace(/[^0-9]/g, "").length >= 7;
+function isValidPhone(v: string): boolean {
+  return v.replace(/[^0-9]/g, "").length >= 7;
 }
 function sanitizeName(name: string | undefined, i: number, ext: string): string {
   const base = (name || `photo-${i + 1}`).replace(/[^a-zA-Z0-9._-]/g, "_").slice(0, 60);
