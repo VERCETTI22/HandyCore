@@ -5,7 +5,6 @@ import { Services } from "@/components/sections/services";
 import { BeforeAfter } from "@/components/sections/before-after";
 import { WhyChoose } from "@/components/sections/why-choose";
 import { HowItWorks } from "@/components/sections/how-it-works";
-import { Reviews } from "@/components/sections/reviews";
 import { Faq } from "@/components/sections/faq";
 import { Cta } from "@/components/sections/cta";
 import { business } from "@/lib/content";
@@ -45,7 +44,6 @@ export default function Home() {
         <BeforeAfter />
         <WhyChoose />
         <HowItWorks />
-        <Reviews />
         <Faq />
         <Cta />
       </main>

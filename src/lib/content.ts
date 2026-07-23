@@ -30,7 +30,6 @@ export const navLinks = [
   { label: "Home", href: "#home" },
   { label: "Services & Pricing", href: "#services" },
   { label: "Projects", href: "#projects" },
-  { label: "Reviews", href: "#reviews" },
   { label: "FAQ", href: "#faq" },
   { label: "Contact", href: "#contact" },
 ];
@@ -137,52 +136,6 @@ export const steps: {
     title: "Enjoy the Results",
     blurb:
       "The job gets done right, cleaned up and checked with you, so your home finally feels finished.",
-  },
-];
-
-/* ---- Reviews ------------------------------------------------------ */
-export type Review = {
-  quote: string;
-  name: string;
-  location: string;
-  initials: string;
-};
-
-export const reviews: Review[] = [
-  {
-    quote:
-      "Mounted our TV and hid every single cable. It looks like it was always meant to be there — punctual and spotless work.",
-    name: "Sarah M.",
-    location: "Westboro · Ottawa, ON",
-    initials: "SM",
-  },
-  {
-    quote:
-      "Assembled two wardrobes and a bed frame in an afternoon. Everything is rock solid and perfectly level. Couldn't be happier.",
-    name: "David R.",
-    location: "Kanata · Ottawa, ON",
-    initials: "DR",
-  },
-  {
-    quote:
-      "Repainted our hallway and it looks brand new. Clean lines, zero mess, and an honest price I agreed to up front.",
-    name: "Priya S.",
-    location: "The Glebe · Ottawa, ON",
-    initials: "PS",
-  },
-  {
-    quote:
-      "Fixed three doors that had been driving me crazy for years. Quick, friendly and genuinely fair. Highly recommend.",
-    name: "Marc L.",
-    location: "Orléans · Ottawa, ON",
-    initials: "ML",
-  },
-  {
-    quote:
-      "Booked an evening slot around my work schedule. Reliable, tidy and easy to deal with — I've already booked him again.",
-    name: "Jennifer T.",
-    location: "Barrhaven · Ottawa, ON",
-    initials: "JT",
   },
 ];
 

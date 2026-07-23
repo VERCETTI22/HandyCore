@@ -4,11 +4,20 @@ import { SectionHeading } from "@/components/ui/section-heading";
 import { Reveal } from "@/components/ui/reveal";
 import { cn } from "@/lib/utils";
 
+/** Real customer feedback, published with first name only and no location. */
+type Review = {
+  quote: string;
+  name: string;
+  initial: string;
+};
+
 type Project = {
   title: string;
   tag: string;
   before: string;
   after: string;
+  /** optional — a card shows just the photos until a real review exists */
+  review?: Review;
 };
 
 const projects: Project[] = [
@@ -17,14 +26,17 @@ const projects: Project[] = [
     tag: "TV Mounting",
     before: "/projects/1-before.jpg",
     after: "/projects/1-after.jpg",
+    review: { quote: "Great", name: "Neel", initial: "N" },
   },
   {
     title: "Exterior light fixture replaced",
     tag: "Lighting",
     before: "/projects/2-before.jpg",
     after: "/projects/2-after.jpg",
+    review: { quote: "Awesome 👍", name: "Sandra", initial: "S" },
   },
   {
+    // no written feedback left for this job — photos speak for themselves
     title: "Floating shelves installed",
     tag: "Shelving",
     before: "/projects/3-before.jpg",
@@ -35,6 +47,11 @@ const projects: Project[] = [
     tag: "General Repairs",
     before: "/projects/4-before.jpg",
     after: "/projects/4-after.jpg",
+    review: {
+      quote: "Conscientious, polite, communicative, adaptable.",
+      name: "Danl",
+      initial: "D",
+    },
   },
 ];
 
@@ -51,9 +68,9 @@ export function BeforeAfter() {
       />
       <Container className="relative">
         <SectionHeading
-          eyebrow="Projects"
+          eyebrow="Projects & Reviews"
           title="Real work, real homes"
-          description="A few recent jobs around Ottawa — here's the before and after, side by side."
+          description="A few recent jobs around Ottawa — the before, the after, and what the homeowner said."
           align="center"
           tone="dark"
         />
@@ -61,7 +78,7 @@ export function BeforeAfter() {
         <div className="mx-auto mt-14 grid max-w-5xl gap-5 sm:gap-6 lg:grid-cols-2">
           {projects.map((project, i) => (
             <Reveal key={project.title} delay={i % 2}>
-              <article className="h-full overflow-hidden rounded-3xl bg-ink-800 ring-1 ring-white/10">
+              <article className="flex h-full flex-col overflow-hidden rounded-3xl bg-ink-800 ring-1 ring-white/10">
                 <div className="grid grid-cols-2 gap-[3px]">
                   <ProjectImage
                     src={project.before}
@@ -74,10 +91,27 @@ export function BeforeAfter() {
                     label="After"
                   />
                 </div>
+
                 <div className="flex items-center justify-between gap-3 px-5 py-4">
                   <h3 className="text-[15px] font-bold text-white">{project.title}</h3>
                   <span className="spec-label shrink-0 text-white/40">{project.tag}</span>
                 </div>
+
+                {project.review && (
+                  <div className="mt-auto flex items-center gap-3 border-t border-white/10 px-5 py-4">
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/10 text-sm font-bold text-white">
+                      {project.review.initial}
+                    </span>
+                    <span className="min-w-0">
+                      <span className="block text-[15px] leading-snug text-white/80">
+                        “{project.review.quote}”
+                      </span>
+                      <span className="mt-0.5 block text-xs font-semibold text-white/45">
+                        {project.review.name}
+                      </span>
+                    </span>
+                  </div>
+                )}
               </article>
             </Reveal>
           ))}
