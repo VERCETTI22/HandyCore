@@ -67,8 +67,8 @@ export function Hero() {
               className="mt-6 max-w-xl text-lg leading-relaxed text-muted"
             >
               Reliable handyman services for homeowners in Ottawa. Fast response,
-              honest pricing, and professional results — from one trusted local pro
-              who treats your home like his own.
+              honest pricing, and professional results — and we treat your home
+              like our own.
             </motion.p>
 
             <motion.div variants={item} className="mt-8 flex flex-wrap items-center gap-3">

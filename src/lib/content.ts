@@ -22,7 +22,7 @@ export const business = {
   phoneHref: "tel:+13436301499",
   email: "info@handycore.co",
   area: "Ottawa & surrounding areas",
-  hours: "Mon–Sat · 8am–8pm",
+  hours: "Mon–Sun · 8am–8pm",
 };
 
 /* ---- Navigation --------------------------------------------------- */
@@ -94,7 +94,7 @@ export const reasons: { icon: LucideIcon; title: string; blurb: string }[] = [
   {
     icon: ShieldCheck,
     title: "Reliable",
-    blurb: "I show up when I say I will and do exactly what I promised.",
+    blurb: "We show up when we say we will and do exactly what we promised.",
   },
   {
     icon: Wallet,
@@ -104,7 +104,7 @@ export const reasons: { icon: LucideIcon; title: string; blurb: string }[] = [
   {
     icon: Sparkles,
     title: "Clean Work",
-    blurb: "I tidy as I go and leave your home cleaner than I found it.",
+    blurb: "We tidy as we go and leave your home cleaner than we found it.",
   },
   {
     icon: Clock,
@@ -129,7 +129,7 @@ export const steps: {
     icon: CalendarClock,
     title: "Schedule Service",
     blurb:
-      "We pick a time that fits your week — including evenings — and I confirm everything before arriving.",
+      "We pick a time that fits your week — including evenings — and we confirm everything before arriving.",
   },
   {
     icon: CheckCircle2,
@@ -143,15 +143,15 @@ export const steps: {
 export const faqs: { q: string; a: string }[] = [
   {
     q: "How much do you charge?",
-    a: "Every home and job is a little different, so I quote each one up front with no hidden fees. Most small jobs start around $80, and you'll always approve the price before I begin.",
+    a: "Every home and job is a little different, so we quote each one up front with no hidden fees. Most small jobs start around $80, and you'll always approve the price before we begin.",
   },
   {
     q: "Do you bring your own tools?",
-    a: "Always. I arrive fully equipped with professional tools and standard fixings, so there's nothing you need to buy, supply or prepare in advance.",
+    a: "Always. We arrive fully equipped with professional tools and standard fixings, so there's nothing you need to buy, supply or prepare in advance.",
   },
   {
     q: "Can I book evenings?",
-    a: "Yes. Alongside daytime slots, I keep evening and select weekend appointments open so we can work around your schedule, not the other way around.",
+    a: "Yes. Alongside daytime slots, we keep evening and select weekend appointments open so we can work around your schedule, not the other way around.",
   },
   {
     q: "How do I pay?",

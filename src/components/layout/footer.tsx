@@ -14,8 +14,8 @@ export function Footer() {
           <div>
             <Logo tone="dark" />
             <p className="mt-5 max-w-xs text-sm leading-relaxed text-white/55">
-              Professional handyman services for Ottawa homeowners. One trusted local
-              pro — insured, punctual, and genuinely proud of the work.
+              Professional handyman services for Ottawa homeowners. A trusted local
+              team — insured, punctual, and genuinely proud of the work.
             </p>
             <a
               href="#contact"

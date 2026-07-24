@@ -16,7 +16,7 @@ export function Services() {
         <SectionHeading
           eyebrow="Services & Pricing"
           title="Handyman services, done right"
-          description="The five jobs Ottawa homeowners call me for most. If what you need isn't listed, just ask — odds are it's on my list too."
+          description="The five jobs Ottawa homeowners call us for most. If what you need isn't listed, just ask — odds are it's on our list too."
         />
 
         <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -66,8 +66,8 @@ export function Services() {
               <div className="mt-6">
                 <h3 className="text-xl font-bold">Something else on your list?</h3>
                 <p className="mt-2 text-[15px] leading-relaxed text-white/60">
-                  Odd jobs, small fixes, whole afternoons of them — tell me what you
-                  need and I&apos;ll sort it.
+                  Odd jobs, small fixes, whole afternoons of them — tell us what you
+                  need and we&apos;ll sort it.
                 </p>
                 <span className="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-brand">
                   Start here

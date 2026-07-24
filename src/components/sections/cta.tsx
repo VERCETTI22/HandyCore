@@ -27,9 +27,9 @@ export function Cta() {
           </Reveal>
           <Reveal delay={2}>
             <p className="mx-auto mt-5 max-w-xl text-lg leading-relaxed text-ink/70">
-              Tell me what needs doing and I&apos;ll send an honest, no-obligation
+              Tell us what needs doing and we&apos;ll send an honest, no-obligation
               quote the same day. No call centres — just a straight answer from the
-              person who&apos;ll do the work.
+              people who&apos;ll do the work.
             </p>
           </Reveal>
           <Reveal delay={3}>

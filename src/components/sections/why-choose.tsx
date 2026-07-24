@@ -28,9 +28,9 @@ export function WhyChoose() {
             </Reveal>
             <Reveal delay={2}>
               <p className="mt-5 max-w-lg text-lg leading-relaxed text-muted">
-                You&apos;re not calling a call centre or a rotating crew. You get one
-                experienced handyman who answers the phone, quotes the job, and does
-                the work himself — carefully, start to finish.
+                You&apos;re not calling a call centre. You get experienced local
+                handymen who answer the phone, quote the job, and do the work
+                themselves — carefully, start to finish.
               </p>
             </Reveal>
 
