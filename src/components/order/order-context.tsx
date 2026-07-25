@@ -35,6 +35,13 @@ type OrderState = {
   contactName: string;
   phone: string;
   email: string;
+  address: string;
+  lat: number | null;
+  lng: number | null;
+  /** preferred dates, ISO yyyy-mm-dd */
+  dates: string[];
+  timeFrom: string;
+  timeTo: string;
   photos: OrderPhoto[];
   status: SubmitStatus;
   errorMessage: string;
@@ -53,6 +60,13 @@ type OrderContextValue = OrderState & {
   setContactName: (v: string) => void;
   setPhone: (v: string) => void;
   setEmail: (v: string) => void;
+  setAddress: (v: string) => void;
+  setLocation: (lat: number, lng: number) => void;
+  clearLocation: () => void;
+  toggleDate: (iso: string) => void;
+  clearDates: () => void;
+  setTimeFrom: (v: string) => void;
+  setTimeTo: (v: string) => void;
   addPhotos: (photos: OrderPhoto[]) => void;
   removePhoto: (id: string) => void;
   goTo: (step: OrderStep) => void;
@@ -72,6 +86,12 @@ const initialState: OrderState = {
   contactName: "",
   phone: "",
   email: "",
+  address: "",
+  lat: null,
+  lng: null,
+  dates: [],
+  timeFrom: "08:00",
+  timeTo: "12:00",
   photos: [],
   status: "idle",
   errorMessage: "",
@@ -171,6 +191,39 @@ export function OrderProvider({ children }: { children: React.ReactNode }) {
     setState((s) => ({ ...s, email: v.slice(0, 160) }));
   }, []);
 
+  const setAddress = React.useCallback((v: string) => {
+    setState((s) => ({ ...s, address: v.slice(0, 200) }));
+  }, []);
+
+  const setLocation = React.useCallback((lat: number, lng: number) => {
+    setState((s) => ({ ...s, lat, lng }));
+  }, []);
+
+  const clearLocation = React.useCallback(() => {
+    setState((s) => ({ ...s, lat: null, lng: null }));
+  }, []);
+
+  const toggleDate = React.useCallback((iso: string) => {
+    setState((s) => {
+      const has = s.dates.includes(iso);
+      if (has) return { ...s, dates: s.dates.filter((d) => d !== iso) };
+      if (s.dates.length >= 6) return s; // keep it sane
+      return { ...s, dates: [...s.dates, iso].sort() };
+    });
+  }, []);
+
+  const clearDates = React.useCallback(() => {
+    setState((s) => ({ ...s, dates: [] }));
+  }, []);
+
+  const setTimeFrom = React.useCallback((v: string) => {
+    setState((s) => ({ ...s, timeFrom: v }));
+  }, []);
+
+  const setTimeTo = React.useCallback((v: string) => {
+    setState((s) => ({ ...s, timeTo: v }));
+  }, []);
+
   const addPhotos = React.useCallback((photos: OrderPhoto[]) => {
     setState((s) => ({ ...s, photos: [...s.photos, ...photos].slice(0, 5) }));
   }, []);
@@ -208,6 +261,12 @@ export function OrderProvider({ children }: { children: React.ReactNode }) {
         contactName: snapshot.contactName,
         phone: snapshot.phone,
         email: snapshot.email,
+        address: snapshot.address,
+        lat: snapshot.lat,
+        lng: snapshot.lng,
+        dates: snapshot.dates,
+        timeFrom: snapshot.timeFrom,
+        timeTo: snapshot.timeTo,
         photos: photoPayload,
         hp: "", // honeypot — real users leave this empty
       };
@@ -250,6 +309,13 @@ export function OrderProvider({ children }: { children: React.ReactNode }) {
     setContactName,
     setPhone,
     setEmail,
+    setAddress,
+    setLocation,
+    clearLocation,
+    toggleDate,
+    clearDates,
+    setTimeFrom,
+    setTimeTo,
     addPhotos,
     removePhoto,
     goTo,

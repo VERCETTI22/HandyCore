@@ -14,12 +14,17 @@ import {
   Loader2,
   PartyPopper,
   AlertCircle,
+  MapPin,
+  Map as MapIcon,
+  CalendarDays,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { estimateFor, formatCad, packages } from "@/lib/order-catalog";
 import { useOrder, type OrderStep } from "./order-context";
 import { PhotoUploader } from "./photo-uploader";
+import { MapPicker } from "./map-picker";
+import { DateTimePicker } from "./date-time-picker";
 
 const FOCUSABLE =
   'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])';
@@ -301,6 +306,19 @@ function DetailsStep() {
     mode,
     description,
     setDescription,
+    address,
+    setAddress,
+    lat,
+    lng,
+    setLocation,
+    clearLocation,
+    dates,
+    toggleDate,
+    clearDates,
+    timeFrom,
+    timeTo,
+    setTimeFrom,
+    setTimeTo,
     contactName,
     setContactName,
     phone,
@@ -309,6 +327,8 @@ function DetailsStep() {
     setEmail,
   } = useOrder();
   const isCustom = mode === "custom";
+  const [mapOpen, setMapOpen] = React.useState(false);
+  const pinned = lat !== null && lng !== null;
 
   return (
     <div className="flex flex-col gap-6">
@@ -349,6 +369,85 @@ function DetailsStep() {
           Show the space or the item — it really helps.
         </p>
         <PhotoUploader />
+      </div>
+
+      {/* Where */}
+      <div>
+        <label htmlFor="order-address" className="block font-semibold text-ink">
+          Where&apos;s the job?
+        </label>
+        <p className="mt-0.5 mb-3 text-[13px] text-muted">
+          Type your address, or drop a pin on the map for the exact spot.
+        </p>
+        <div className="flex gap-2">
+          <input
+            id="order-address"
+            value={address}
+            onChange={(e) => setAddress(e.target.value)}
+            placeholder="Street address, Ottawa"
+            autoComplete="street-address"
+            className="min-w-0 flex-1 rounded-xl border border-line bg-surface px-4 py-3 text-sm text-ink outline-none transition-colors placeholder:text-faint focus:border-brand focus:bg-paper"
+          />
+          <button
+            type="button"
+            onClick={() => setMapOpen((v) => !v)}
+            aria-label={mapOpen ? "Hide map" : "Pick location on map"}
+            aria-expanded={mapOpen}
+            className={cn(
+              "inline-flex h-[46px] w-[46px] shrink-0 items-center justify-center rounded-xl border transition-colors",
+              mapOpen || pinned
+                ? "border-brand bg-brand-tint text-brand-700"
+                : "border-line bg-surface text-ink hover:border-brand/40",
+            )}
+          >
+            <MapIcon className="h-5 w-5" />
+          </button>
+        </div>
+
+        {pinned && (
+          <div className="mt-2 flex items-center gap-2 text-xs text-muted">
+            <MapPin className="h-3.5 w-3.5 text-brand-700" />
+            <span>Location pinned</span>
+            <button
+              type="button"
+              onClick={clearLocation}
+              className="font-medium underline-offset-2 hover:underline"
+            >
+              clear
+            </button>
+          </div>
+        )}
+
+        {mapOpen && (
+          <div className="mt-3">
+            <MapPicker
+              lat={lat}
+              lng={lng}
+              onPick={setLocation}
+              onAddress={setAddress}
+            />
+          </div>
+        )}
+      </div>
+
+      {/* When */}
+      <div>
+        <span className="flex items-center gap-2 font-semibold text-ink">
+          <CalendarDays className="h-4 w-4 text-brand-700" />
+          Preferred dates &amp; time
+        </span>
+        <p className="mt-0.5 mb-3 text-[13px] text-muted">
+          Optional — pick any days that suit you and we&apos;ll confirm one.
+        </p>
+        <DateTimePicker
+          dates={dates}
+          onToggle={toggleDate}
+          onClear={clearDates}
+          timeFrom={timeFrom}
+          timeTo={timeTo}
+          onTimeFrom={setTimeFrom}
+          onTimeTo={setTimeTo}
+        />
       </div>
 
       <div>
@@ -413,6 +512,12 @@ function SummaryStep() {
     quantity,
     pkg,
     description,
+    address,
+    lat,
+    lng,
+    dates,
+    timeFrom,
+    timeTo,
     contactName,
     phone,
     email,
@@ -422,6 +527,7 @@ function SummaryStep() {
   } = useOrder();
   const isCustom = mode === "custom";
   if (!isCustom && !task) return null;
+  const pinned = lat !== null && lng !== null;
   const estimate = task ? estimateFor(task, quantity, pkg) : 0;
   const pkgName = packages.find((p) => p.id === pkg)?.name;
 
@@ -445,6 +551,10 @@ function SummaryStep() {
           )}
           {(description || isCustom) && (
             <Row label={isCustom ? "Details" : "Notes"} value={description || "—"} />
+          )}
+          <Row label="Address" value={pinned ? `${address || "—"} · 📍 pinned` : address || "—"} />
+          {dates.length > 0 && (
+            <Row label="When" value={formatWhen(dates, timeFrom, timeTo)} />
           )}
           <Row label="Name" value={contactName || "—"} />
           <Row label="Phone" value={phone || "—"} />
@@ -491,6 +601,7 @@ function ModalFooter() {
     submit,
     status,
     description,
+    address,
     contactName,
     phone,
     email,
@@ -501,7 +612,8 @@ function ModalFooter() {
   const contactValid =
     contactName.trim().length > 0 && isValidPhone(phone) && isValidEmail(email);
   const descValid = mode !== "custom" || description.trim().length >= 10;
-  const canReview = contactValid && descValid;
+  const addressValid = address.trim().length >= 5;
+  const canReview = contactValid && descValid && addressValid;
 
   return (
     <div className="border-t border-line px-5 py-4 sm:px-7">
@@ -525,7 +637,9 @@ function ModalFooter() {
             <p className="text-center text-xs text-muted">
               {!descValid
                 ? "Add a short description of the job."
-                : "Add your name, phone and email so we can reach you."}
+                : !addressValid
+                  ? "Add the address so we know where to come."
+                  : "Add your name, phone and email so we can reach you."}
             </p>
           )}
         </div>
@@ -685,4 +799,26 @@ function isValidEmail(v: string): boolean {
 }
 function isValidPhone(v: string): boolean {
   return v.replace(/[^0-9]/g, "").length >= 7;
+}
+
+function fmtTime(t: string): string {
+  const [h, m] = t.split(":").map(Number);
+  return new Date(2000, 0, 1, h, m).toLocaleTimeString("en-US", {
+    hour: "numeric",
+    minute: "2-digit",
+  });
+}
+
+function formatWhen(dates: string[], from: string, to: string): string {
+  const days = dates
+    .map((iso) => {
+      const [y, m, d] = iso.split("-").map(Number);
+      return new Date(y, m - 1, d).toLocaleDateString("en-US", {
+        weekday: "short",
+        month: "short",
+        day: "numeric",
+      });
+    })
+    .join(" · ");
+  return `${days} · ${fmtTime(from)}–${fmtTime(to)}`;
 }

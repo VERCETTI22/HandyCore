@@ -20,6 +20,12 @@ type IncomingOrder = {
   contactName?: string;
   phone?: string;
   email?: string;
+  address?: string;
+  lat?: number | null;
+  lng?: number | null;
+  dates?: string[];
+  timeFrom?: string;
+  timeTo?: string;
   photos?: IncomingPhoto[];
   hp?: string; // honeypot
 };
@@ -93,6 +99,31 @@ export async function POST(request: Request) {
   }
   const description = (body.description ?? "").trim().slice(0, 2000);
 
+  // --- shared: location -----------------------------------------------
+  const address = (body.address ?? "").trim().slice(0, 200);
+  if (address.length < 5) {
+    return NextResponse.json(
+      { error: "Please include the job address." },
+      { status: 400 },
+    );
+  }
+  const lat = typeof body.lat === "number" && isFinite(body.lat) ? body.lat : null;
+  const lng = typeof body.lng === "number" && isFinite(body.lng) ? body.lng : null;
+  const mapLink =
+    lat !== null && lng !== null
+      ? `https://www.google.com/maps?q=${lat.toFixed(6)},${lng.toFixed(6)}`
+      : null;
+
+  // --- shared: preferred date/time ------------------------------------
+  const dates = Array.isArray(body.dates)
+    ? body.dates
+        .filter((d) => typeof d === "string" && /^\d{4}-\d{2}-\d{2}$/.test(d))
+        .slice(0, 6)
+    : [];
+  const timeFrom = /^\d{2}:\d{2}$/.test(body.timeFrom ?? "") ? body.timeFrom! : "";
+  const timeTo = /^\d{2}:\d{2}$/.test(body.timeTo ?? "") ? body.timeTo! : "";
+  const whenText = formatWhen(dates, timeFrom, timeTo);
+
   // --- task-specific bits -------------------------------------------
   let subject: string;
   let title: string;
@@ -135,6 +166,11 @@ export async function POST(request: Request) {
     );
     if (description) rows.push({ label: "Notes", value: description });
   }
+
+  // --- shared: location + timing rows -------------------------------
+  rows.push({ label: "Address", value: address });
+  if (mapLink) rows.push({ label: "Map", value: mapLink });
+  if (whenText) rows.push({ label: "When", value: whenText });
 
   // --- shared: contact rows -----------------------------------------
   rows.push(
@@ -226,18 +262,42 @@ function isValidEmail(v: string): boolean {
 function isValidPhone(v: string): boolean {
   return v.replace(/[^0-9]/g, "").length >= 7;
 }
+function fmtTime(t: string): string {
+  const [h, m] = t.split(":").map(Number);
+  return new Date(2000, 0, 1, h, m).toLocaleTimeString("en-US", {
+    hour: "numeric",
+    minute: "2-digit",
+  });
+}
+function formatWhen(dates: string[], from: string, to: string): string {
+  if (dates.length === 0) return "";
+  const days = dates
+    .map((iso) => {
+      const [y, m, d] = iso.split("-").map(Number);
+      return new Date(y, m - 1, d).toLocaleDateString("en-US", {
+        weekday: "short",
+        month: "short",
+        day: "numeric",
+      });
+    })
+    .join(" · ");
+  const window = from && to ? ` · ${fmtTime(from)}–${fmtTime(to)}` : "";
+  return days + window;
+}
 function sanitizeName(name: string | undefined, i: number, ext: string): string {
   const base = (name || `photo-${i + 1}`).replace(/[^a-zA-Z0-9._-]/g, "_").slice(0, 60);
   return /\.(jpe?g|png|webp)$/i.test(base) ? base : `${base}.${ext}`;
 }
 
 function buildHtml(title: string, subtitle: string, rows: Row[]): string {
-  const rowHtml = (label: string, value: string) =>
-    `<tr><td style="padding:6px 14px 6px 0;color:#6b6b6b;font-size:13px;white-space:nowrap;vertical-align:top">${escapeHtml(
+  const rowHtml = (label: string, value: string) => {
+    const cell = /^https?:\/\//.test(value)
+      ? `<a href="${escapeHtml(value)}" style="color:#c88f00;font-weight:600">Open in Maps</a>`
+      : escapeHtml(value);
+    return `<tr><td style="padding:6px 14px 6px 0;color:#6b6b6b;font-size:13px;white-space:nowrap;vertical-align:top">${escapeHtml(
       label,
-    )}</td><td style="padding:6px 0;color:#121212;font-size:14px;font-weight:600">${escapeHtml(
-      value,
-    )}</td></tr>`;
+    )}</td><td style="padding:6px 0;color:#121212;font-size:14px;font-weight:600">${cell}</td></tr>`;
+  };
   return `
   <div style="font-family:Arial,Helvetica,sans-serif;max-width:560px;margin:0 auto">
     <div style="background:#121212;color:#fff;border-radius:16px;padding:20px 24px">
