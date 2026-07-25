@@ -97,7 +97,15 @@ export function Footer() {
           <p className="text-sm text-white/45">
             © {year} {business.name}. All rights reserved.
           </p>
-          <p className="spec-label text-white/30">Handyman services · Ottawa, ON</p>
+          <div className="flex items-center gap-5">
+            <a
+              href="/privacy"
+              className="text-sm text-white/55 transition-colors hover:text-brand"
+            >
+              Privacy Policy
+            </a>
+            <span className="spec-label text-white/30">Ottawa, ON</span>
+          </div>
         </div>
       </Container>
     </footer>
