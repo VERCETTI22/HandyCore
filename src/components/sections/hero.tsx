@@ -23,19 +23,24 @@ export function Hero() {
 
   return (
     <section id="home" className="relative overflow-hidden">
-      {/* ---- photo: full-bleed backdrop on desktop ---------------------
-           The shot has an empty, light left-hand side, so the copy sits
-           straight on it; a soft wash guarantees contrast at any width. */}
-      <div aria-hidden className="absolute inset-0 hidden lg:block">
+      {/* ---- photo: bleeds off the right edge on desktop ----------------
+           Sized so the frame stays close to the shot's own proportions —
+           stretching it across the full width cropped the shelf and tools
+           away and blew the toolbox up. The wash only covers the photo's
+           left edge, so it blends into the page without fading the tools. */}
+      <div
+        aria-hidden
+        className="absolute inset-y-0 right-0 hidden w-[58%] xl:w-[62%] lg:block"
+      >
         <Image
           src="/hero.jpg"
           alt=""
           fill
           priority
-          sizes="100vw"
+          sizes="62vw"
           className="object-cover object-right"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-paper via-paper/85 via-35% to-transparent" />
+        <div className="absolute inset-y-0 left-0 w-[24%] bg-gradient-to-r from-paper to-transparent" />
       </div>
 
       <Container className="relative">
@@ -44,7 +49,7 @@ export function Hero() {
             variants={container}
             initial="hidden"
             animate="show"
-            className="lg:max-w-[46%]"
+            className="lg:max-w-[42%]"
           >
             <motion.div variants={item}>
               <span className="inline-flex items-center gap-2 rounded-full border border-line bg-paper/80 px-4 py-2 text-sm font-medium text-text shadow-soft backdrop-blur-sm">
