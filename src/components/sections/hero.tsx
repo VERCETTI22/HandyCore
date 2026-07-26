@@ -1,11 +1,10 @@
 "use client";
 
-import * as React from "react";
+import Image from "next/image";
 import { motion, type Variants } from "framer-motion";
 import { MapPin, Phone, Star, ShieldCheck, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
-import { HeroScene } from "@/components/visuals/hero-scene";
 import { useContactModal } from "@/components/ui/contact-modal";
 import { heroStats } from "@/lib/content";
 
@@ -23,21 +22,32 @@ export function Hero() {
   const { openContactModal } = useContactModal();
 
   return (
-    <section
-      id="home"
-      className="relative flex min-h-[100svh] items-center overflow-hidden pt-28 pb-16 lg:pt-32"
-    >
-      {/* soft ambient wash behind the illustration column */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute right-[-6%] top-1/2 h-[28rem] w-[28rem] -translate-y-1/2 rounded-full bg-brand/12 blur-3xl"
-      />
+    <section id="home" className="relative overflow-hidden">
+      {/* ---- photo: full-bleed backdrop on desktop ---------------------
+           The shot has an empty, light left-hand side, so the copy sits
+           straight on it; a soft wash guarantees contrast at any width. */}
+      <div aria-hidden className="absolute inset-0 hidden lg:block">
+        <Image
+          src="/hero.jpg"
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-right"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-paper via-paper/85 via-35% to-transparent" />
+      </div>
+
       <Container className="relative">
-        <div className="grid items-center gap-14 lg:grid-cols-[1.05fr_1fr] lg:gap-12">
-          {/* ---- left ---- */}
-          <motion.div variants={container} initial="hidden" animate="show">
+        <div className="flex min-h-[100svh] flex-col justify-center pt-28 pb-16 lg:min-h-[92svh] lg:pt-32">
+          <motion.div
+            variants={container}
+            initial="hidden"
+            animate="show"
+            className="lg:max-w-[46%]"
+          >
             <motion.div variants={item}>
-              <span className="inline-flex items-center gap-2 rounded-full border border-line bg-surface px-4 py-2 text-sm font-medium text-text shadow-soft">
+              <span className="inline-flex items-center gap-2 rounded-full border border-line bg-paper/80 px-4 py-2 text-sm font-medium text-text shadow-soft backdrop-blur-sm">
                 <MapPin className="h-4 w-4 text-brand-700" />
                 Professional Handyman Services in Ottawa
               </span>
@@ -81,7 +91,7 @@ export function Hero() {
               </Button>
             </motion.div>
 
-            {/* stat cards */}
+            {/* trust stats */}
             <motion.div
               variants={item}
               className="mt-10 grid grid-cols-1 gap-3 sm:grid-cols-3"
@@ -91,7 +101,7 @@ export function Hero() {
                 return (
                   <div
                     key={stat.label}
-                    className="flex items-center gap-3 rounded-2xl border border-line bg-paper p-4 shadow-soft"
+                    className="flex items-center gap-3 rounded-2xl border border-line bg-paper/90 p-4 shadow-soft backdrop-blur-sm"
                   >
                     <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-tint text-brand-700">
                       <Icon className="h-5 w-5" fill={i === 0 ? "currentColor" : "none"} />
@@ -107,55 +117,25 @@ export function Hero() {
               })}
             </motion.div>
           </motion.div>
-
-          {/* ---- right — illustration ---- */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.96, y: 12 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
-            className="relative mx-auto w-full max-w-[520px] lg:max-w-none"
-          >
-            <div className="group relative aspect-[4/5] overflow-hidden rounded-[24px] bg-surface shadow-lift ring-1 ring-line">
-              <HeroScene className="h-full w-full transition-transform duration-[900ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.04]" />
-            </div>
-
-            {/* floating rating chip */}
-            <motion.div
-              initial={{ opacity: 0, y: 14 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.7, duration: 0.6 }}
-              className="absolute -left-3 top-8 flex items-center gap-3 rounded-2xl border border-line bg-paper/90 px-4 py-3 shadow-lift backdrop-blur-md sm:-left-6"
-            >
-              <div className="flex text-brand">
-                {Array.from({ length: 5 }).map((_, i) => (
-                  <Star key={i} className="h-3.5 w-3.5" fill="currentColor" />
-                ))}
-              </div>
-              <div className="leading-tight">
-                <div className="text-sm font-extrabold text-ink">4.9 rating</div>
-                <div className="text-xs text-muted">100+ local jobs</div>
-              </div>
-            </motion.div>
-
-            {/* floating availability chip */}
-            <motion.div
-              initial={{ opacity: 0, y: 14 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.85, duration: 0.6 }}
-              className="absolute -right-3 bottom-8 flex items-center gap-3 rounded-2xl border border-line bg-paper/90 px-4 py-3 shadow-lift backdrop-blur-md sm:-right-6"
-            >
-              <span className="relative flex h-2.5 w-2.5 items-center justify-center">
-                <span className="absolute h-4 w-4 rounded-full bg-emerald-400/25" />
-                <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-500 ring-2 ring-emerald-500/20" />
-              </span>
-              <div className="leading-tight">
-                <div className="text-sm font-extrabold text-ink">Available this week</div>
-                <div className="text-xs text-muted">Booking in Ottawa now</div>
-              </div>
-            </motion.div>
-          </motion.div>
         </div>
       </Container>
+
+      {/* ---- photo: stacked under the copy on phones and tablets ---- */}
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+        className="relative -mt-6 aspect-[3/2] w-full lg:hidden"
+      >
+        <Image
+          src="/hero.jpg"
+          alt="HandyCore toolbox, drill, level and hand tools laid out in a bright home"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover"
+        />
+      </motion.div>
     </section>
   );
 }
