@@ -27,11 +27,11 @@ export const business = {
 
 /* ---- Navigation --------------------------------------------------- */
 export const navLinks = [
-  { label: "Home", href: "#home" },
-  { label: "Services & Pricing", href: "#services" },
-  { label: "Projects", href: "#projects" },
-  { label: "FAQ", href: "#faq" },
-  { label: "Contact", href: "#contact" },
+  { label: "Home", href: "/#home" },
+  { label: "Services & Pricing", href: "/#services" },
+  { label: "Projects", href: "/#projects" },
+  { label: "FAQ", href: "/#faq" },
+  { label: "Contact", href: "/#contact" },
 ];
 
 /* ---- Hero trust stats --------------------------------------------- */

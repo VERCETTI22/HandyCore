@@ -50,7 +50,7 @@ export function WhyChoose() {
 
             <Reveal delay={4}>
               <div className="mt-9">
-                <Button href="#contact" size="lg">
+                <Button href="/#contact" size="lg">
                   Get a free quote
                 </Button>
               </div>

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Phone, Mail, Clock, MapPin } from "lucide-react";
 import { Container } from "@/components/ui/container";
 import { Logo } from "@/components/ui/logo";
@@ -17,12 +18,12 @@ export function Footer() {
               Professional handyman services for Ottawa homeowners. A trusted local
               team — insured, punctual, and genuinely proud of the work.
             </p>
-            <a
-              href="#contact"
+            <Link
+              href="/#contact"
               className="mt-6 inline-flex items-center gap-2 rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-ink transition-colors hover:bg-brand-600"
             >
               Get a free quote
-            </a>
+            </Link>
           </div>
 
           {/* quick links */}
@@ -31,12 +32,12 @@ export function Footer() {
             <ul className="mt-5 flex flex-col gap-3">
               {navLinks.map((link) => (
                 <li key={link.href}>
-                  <a
+                  <Link
                     href={link.href}
                     className="text-sm text-white/70 transition-colors hover:text-brand"
                   >
                     {link.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -48,12 +49,12 @@ export function Footer() {
             <ul className="mt-5 flex flex-col gap-3">
               {services.map((service) => (
                 <li key={service.title}>
-                  <a
-                    href="#services"
+                  <Link
+                    href="/#services"
                     className="text-sm text-white/70 transition-colors hover:text-brand"
                   >
                     {service.title}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -98,12 +99,12 @@ export function Footer() {
             © {year} {business.name}. All rights reserved.
           </p>
           <div className="flex items-center gap-5">
-            <a
+            <Link
               href="/privacy"
               className="text-sm text-white/55 transition-colors hover:text-brand"
             >
               Privacy Policy
-            </a>
+            </Link>
             <span className="spec-label text-white/30">Ottawa, ON</span>
           </div>
         </div>

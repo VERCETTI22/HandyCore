@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X, Phone } from "lucide-react";
 import { Logo } from "@/components/ui/logo";
@@ -41,26 +42,26 @@ export function Navbar() {
     >
       <Container className="flex h-[70px] items-center justify-between gap-4 lg:grid lg:grid-cols-[1fr_auto_1fr]">
         {/* left — logo */}
-        <a
-          href="#home"
+        <Link
+          href="/#home"
           className="justify-self-start rounded-lg py-1"
           aria-label="HandyCore home"
           onClick={() => setOpen(false)}
         >
           <Logo priority />
-        </a>
+        </Link>
 
         {/* center — nav */}
         <nav className="hidden justify-self-center lg:flex">
           <ul className="flex items-center gap-1">
             {navLinks.map((link) => (
               <li key={link.href}>
-                <a
+                <Link
                   href={link.href}
                   className="relative rounded-full px-3.5 py-2 text-sm font-medium text-muted transition-colors hover:text-ink"
                 >
                   {link.label}
-                </a>
+                </Link>
               </li>
             ))}
           </ul>
@@ -107,13 +108,13 @@ export function Navbar() {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.05 + i * 0.04 }}
                   >
-                    <a
+                    <Link
                       href={link.href}
                       onClick={() => setOpen(false)}
                       className="block rounded-xl px-3 py-3 text-base font-semibold text-ink transition-colors hover:bg-surface"
                     >
                       {link.label}
-                    </a>
+                    </Link>
                   </motion.li>
                 ))}
               </ul>

@@ -1,8 +1,22 @@
 import * as React from "react";
 
+/* Palette — kept in step with the brand tokens */
+const YELLOW = "#F4B400";
+const YELLOW_DEEP = "#d99f00";
+const INK = "#121212";
+const SKIN = "#e3a880";
+const SKIN_SHADE = "#d1946f";
+const SHIRT = "#3b4655";
+const SHIRT_DARK = "#323c49";
+const DENIM = "#2a313c";
+const WOOD = "#c98a4b";
+const WOOD_DARK = "#ac7137";
+const STEEL = "#525a64";
+const STEEL_LIGHT = "#6b747f";
+
 /**
- * Editorial illustration: a handyman mounting a floating shelf in a modern,
- * light-filled room. Back-view figure, brand palette only.
+ * Hero illustration: a handyman standing in a bright apartment, hammer in hand.
+ * Drawn at exactly 4:5 so nothing is cropped by the hero frame.
  *
  * Swap for a real photo later: drop an image into /public and render it in the
  * hero instead of this component (see components/sections/hero.tsx).
@@ -10,154 +24,163 @@ import * as React from "react";
 export function HeroScene({ className }: { className?: string }) {
   return (
     <svg
-      viewBox="0 0 620 760"
+      viewBox="0 0 600 750"
       className={className}
       role="img"
-      aria-label="Illustration of a handyman mounting a shelf in a modern home"
+      aria-label="Illustration of a handyman holding a hammer in a bright apartment"
       preserveAspectRatio="xMidYMid slice"
     >
-      {/* ---- room shell ---- */}
-      <rect width="620" height="760" fill="#f5f2ea" />
-      <rect y="452" width="620" height="120" fill="#efe9dd" />
-      <rect x="0" y="450" width="620" height="2" fill="#12121210" />
-      {/* floor */}
-      <rect y="572" width="620" height="188" fill="#e7ddcb" />
-      <rect y="572" width="620" height="3" fill="#1212120d" />
-      <g stroke="#12121210" strokeWidth="1.5">
-        <line x1="150" y1="572" x2="120" y2="760" />
-        <line x1="330" y1="572" x2="330" y2="760" />
-        <line x1="510" y1="572" x2="545" y2="760" />
+      {/* ---------------- room ---------------- */}
+      <rect width="600" height="750" fill="#f7f4ee" />
+      {/* daylight falling in from the window */}
+      <path d="M64 145 L244 145 L392 750 L112 750 Z" fill="#ffffff" opacity="0.32" />
+      {/* baseboard + floor */}
+      <rect y="543" width="600" height="14" fill="#ffffff" />
+      <rect y="557" width="600" height="193" fill="#e4d9c6" />
+      <g stroke={INK} strokeOpacity="0.06" strokeWidth="2">
+        <line x1="150" y1="557" x2="120" y2="750" />
+        <line x1="330" y1="557" x2="330" y2="750" />
+        <line x1="500" y1="557" x2="536" y2="750" />
       </g>
 
-      {/* ---- soft daylight beam from the window ---- */}
-      <path d="M60 120 L250 120 L430 760 L120 760 Z" fill="#ffffff" opacity="0.28" />
-
-      {/* ---- window ---- */}
+      {/* ---------------- window ---------------- */}
       <g>
-        <rect x="46" y="104" width="176" height="232" rx="8" fill="#eef3f4" />
+        <rect x="64" y="145" width="180" height="230" rx="6" fill="#e9eff1" />
         <rect
-          x="46"
-          y="104"
-          width="176"
-          height="232"
-          rx="8"
+          x="64"
+          y="145"
+          width="180"
+          height="230"
+          rx="6"
           fill="none"
-          stroke="#121212"
-          strokeWidth="3"
+          stroke={INK}
+          strokeWidth="5"
         />
-        <line x1="134" y1="108" x2="134" y2="332" stroke="#121212" strokeWidth="3" />
-        <line x1="50" y1="220" x2="218" y2="220" stroke="#121212" strokeWidth="3" />
+        <line x1="154" y1="147" x2="154" y2="373" stroke={INK} strokeWidth="5" />
+        <line x1="66" y1="260" x2="242" y2="260" stroke={INK} strokeWidth="5" />
         {/* sill */}
-        <rect x="38" y="336" width="192" height="11" rx="4" fill="#ffffff" />
-        <rect x="38" y="347" width="192" height="5" rx="2" fill="#12121212" />
+        <rect x="54" y="375" width="200" height="12" rx="4" fill="#ffffff" />
+        <rect x="54" y="387" width="200" height="5" rx="2" fill={INK} opacity="0.07" />
       </g>
 
-      {/* windowsill plant */}
+      {/* plant on the sill */}
       <g>
-        <path d="M74 336 h26 l-4 -22 h-18 z" fill="#121212" />
-        <path
-          d="M87 314 C 78 296 74 288 82 276 C 86 292 90 300 87 314 Z"
-          fill="#F4B400"
-        />
-        <path
-          d="M87 314 C 96 298 102 292 96 278 C 90 294 88 300 87 314 Z"
-          fill="#121212"
-          opacity="0.85"
-        />
+        <path d="M92 375 h34 l-5 -32 h-24 z" fill={INK} />
+        <line x1="109" y1="345" x2="109" y2="306" stroke={INK} strokeWidth="3" />
+        <ellipse cx="93" cy="326" rx="15" ry="9" transform="rotate(-24 93 326)" fill={INK} opacity="0.85" />
+        <ellipse cx="126" cy="322" rx="15" ry="9" transform="rotate(22 126 322)" fill={INK} opacity="0.7" />
+        <ellipse cx="109" cy="308" rx="13" ry="10" transform="rotate(-6 109 308)" fill={INK} opacity="0.9" />
       </g>
 
-      {/* ---- pendant lamp ---- */}
-      <line x1="486" y1="0" x2="486" y2="96" stroke="#121212" strokeWidth="2.5" />
-      <path d="M462 130 C 462 106 510 106 510 130 Z" fill="#121212" />
-      <ellipse cx="486" cy="132" rx="24" ry="5" fill="#F4B400" />
-
-      {/* ---- floating shelf ---- */}
-      <ellipse cx="366" cy="322" rx="128" ry="9" fill="#121212" opacity="0.06" />
-      <rect x="248" y="298" width="236" height="15" rx="5" fill="#ffffff" />
-      <rect x="248" y="309" width="236" height="5" rx="2.5" fill="#12121212" />
-      <rect x="270" y="313" width="12" height="30" rx="3" fill="#121212" />
-      <rect x="450" y="313" width="12" height="30" rx="3" fill="#121212" />
-      {/* shelf styling: books, plant, frame */}
-      <rect x="300" y="266" width="12" height="32" rx="2" fill="#121212" />
-      <rect x="314" y="272" width="12" height="26" rx="2" fill="#F4B400" />
-      <rect x="330" y="262" width="12" height="36" rx="2" fill="#2b2f36" />
+      {/* ---------------- pendant lamp ---------------- */}
       <g>
-        <rect x="416" y="270" width="30" height="28" rx="4" fill="#121212" />
-        <rect x="421" y="275" width="20" height="18" rx="2" fill="#F4B400" />
-      </g>
-      {/* small plant on shelf */}
-      <path d="M356 298 h22 l-3 -16 h-16 z" fill="#12121218" />
-      <path d="M367 282 C 360 270 358 264 364 256 C 366 268 369 274 367 282 Z" fill="#121212" opacity="0.8" />
-      <path d="M367 282 C 374 270 378 264 372 256 C 368 268 366 274 367 282 Z" fill="#F4B400" />
-
-      {/* ---- rug ---- */}
-      <ellipse cx="330" cy="690" rx="220" ry="34" fill="#fff6de" />
-      <ellipse cx="330" cy="690" rx="220" ry="34" fill="none" stroke="#F4B400" strokeOpacity="0.4" strokeWidth="2" />
-
-      {/* ---- figure shadow ---- */}
-      <ellipse cx="360" cy="654" rx="86" ry="16" fill="#121212" opacity="0.08" />
-
-      {/* ================= handyman (back view) ================= */}
-      <g strokeLinecap="round" strokeLinejoin="round">
-        {/* legs */}
-        <path d="M338 452 q-6 90 -8 176 l24 0 q4 -84 8 -170 z" fill="#20242b" />
-        <path d="M372 452 q8 90 10 178 l24 0 q0 -88 -8 -174 z" fill="#191d23" />
-        {/* boots */}
-        <path d="M324 628 h30 v10 q0 8 -10 8 h-26 q-6 0 -6 -6 q0 -8 12 -12 z" fill="#121212" />
-        <path d="M382 630 h30 v10 q0 8 -10 8 h-26 q-6 0 -6 -6 q0 -8 12 -12 z" fill="#121212" />
-
-        {/* torso / work shirt (back) */}
-        <path
-          d="M318 322 q-6 -18 14 -24 q34 -8 66 2 q16 6 12 24 l-8 116 q-2 16 -20 16 h-52 q-16 0 -16 -16 z"
-          fill="#3c434d"
-        />
-        {/* back seam + yoke */}
-        <path d="M366 302 v150" stroke="#2f353d" strokeWidth="2.5" />
-        <path d="M322 330 q44 14 88 0" fill="none" stroke="#2f353d" strokeWidth="2.5" />
-
-        {/* tool belt */}
-        <rect x="312" y="430" width="108" height="18" rx="4" fill="#F4B400" />
-        <rect x="330" y="446" width="26" height="26" rx="4" fill="#121212" />
-        <rect x="378" y="446" width="26" height="30" rx="4" fill="#1b1b1b" />
-
-        {/* left arm resting at side */}
-        <path d="M406 330 q22 12 20 58 q-2 24 -12 40" fill="none" stroke="#3c434d" strokeWidth="22" />
-        <circle cx="412" cy="432" r="10" fill="#d99f76" />
-
-        {/* head + hair + cap (facing the wall) */}
-        <rect x="356" y="286" width="18" height="20" rx="8" fill="#d99f76" />
-        <circle cx="366" cy="266" r="27" fill="#d99f76" />
-        <path d="M340 266 q0 -30 27 -30 q27 0 26 28 q-14 -12 -30 -8 q-16 4 -23 10 z" fill="#1c1c1c" />
-        {/* cap */}
-        <path d="M338 258 q2 -30 30 -30 q28 0 30 28 q-30 -10 -60 2 z" fill="#F4B400" />
-        <path d="M334 258 q-14 2 -20 8 q18 4 30 -2 z" fill="#e3a500" />
-
-        {/* raised right arm holding a drill up to the shelf bracket */}
-        <path d="M330 328 q-30 -6 -50 -24" fill="none" stroke="#3c434d" strokeWidth="22" />
-        <path d="M280 304 q-14 -12 -22 -20" fill="none" stroke="#d99f76" strokeWidth="17" />
+        <line x1="490" y1="0" x2="490" y2="150" stroke={INK} strokeWidth="4" />
+        <path d="M462 190 C 462 160 518 160 518 190 Z" fill={INK} />
+        <ellipse cx="490" cy="190" rx="28" ry="6" fill={YELLOW} />
       </g>
 
-      {/* ---- cordless drill in raised hand ---- */}
+      {/* ---------------- shelf ---------------- */}
       <g>
-        <rect x="236" y="286" width="30" height="18" rx="5" fill="#121212" transform="rotate(-32 251 295)" />
-        <rect x="248" y="296" width="12" height="26" rx="4" fill="#1b1b1b" transform="rotate(-32 254 309)" />
-        <rect x="248" y="316" width="16" height="9" rx="3" fill="#F4B400" transform="rotate(-32 256 320)" />
-        <rect x="226" y="290" width="16" height="7" rx="3" fill="#3c434d" transform="rotate(-32 234 293)" />
-        <circle cx="223" cy="289" r="3.4" fill="#F4B400" />
+        <rect x="424" y="240" width="146" height="11" rx="4" fill="#ffffff" />
+        <rect x="424" y="251" width="146" height="4" rx="2" fill={INK} opacity="0.09" />
+        <rect x="440" y="212" width="13" height="28" rx="2" fill={INK} />
+        <rect x="456" y="204" width="13" height="36" rx="2" fill={YELLOW} />
+        <rect x="472" y="216" width="13" height="24" rx="2" fill={SHIRT} />
+        {/* small framed picture */}
+        <rect x="502" y="206" width="34" height="34" rx="4" fill={INK} />
+        <rect x="508" y="212" width="22" height="22" rx="2" fill={YELLOW} />
       </g>
 
-      {/* ---- toolbox on the floor ---- */}
+      {/* ---------------- rug + shadow ---------------- */}
+      <ellipse cx="380" cy="686" rx="182" ry="30" fill="#fdf3dc" />
+      <ellipse cx="380" cy="686" rx="182" ry="30" fill="none" stroke={YELLOW} strokeOpacity="0.35" strokeWidth="2" />
+      <ellipse cx="380" cy="678" rx="78" ry="14" fill={INK} opacity="0.1" />
+
+      {/* ---------------- toolbox ---------------- */}
       <g>
-        <rect x="120" y="560" width="96" height="46" rx="8" fill="#121212" />
-        <rect x="120" y="560" width="96" height="14" rx="7" fill="#1b1b1b" />
+        <rect x="105" y="602" width="130" height="53" rx="9" fill={INK} />
+        <rect x="105" y="602" width="130" height="15" rx="7" fill="#1e1e1e" />
         <path
-          d="M150 560 q0 -16 18 -16 q18 0 18 16"
+          d="M148 602 q0 -19 22 -19 q22 0 22 19"
           fill="none"
-          stroke="#F4B400"
-          strokeWidth="6"
+          stroke={YELLOW}
+          strokeWidth="7"
           strokeLinecap="round"
         />
-        <rect x="134" y="582" width="68" height="4" rx="2" fill="#F4B400" opacity="0.85" />
+        <rect x="120" y="629" width="100" height="6" rx="3" fill={YELLOW} opacity="0.9" />
+      </g>
+
+      {/* ================= handyman ================= */}
+      <g strokeLinecap="round" strokeLinejoin="round">
+        {/* legs */}
+        <path d="M348 500 L344 660 L372 660 L378 500 Z" fill={DENIM} />
+        <path d="M388 500 L394 660 L422 660 L416 500 Z" fill="#232932" />
+        {/* boots */}
+        <path d="M338 656 h36 v14 q0 9 -9 9 h-31 q-7 0 -7 -7 q0 -9 11 -13 z" fill={INK} />
+        <path d="M390 656 h36 v14 q0 9 -9 9 h-31 q-7 0 -7 -7 q0 -9 11 -13 z" fill={INK} />
+
+        {/* torso */}
+        <path
+          d="M346 372 C346 360 358 352 380 352 C402 352 416 360 416 372 L418 492 L342 492 Z"
+          fill={SHIRT}
+        />
+        {/* button placket + collar */}
+        <line x1="380" y1="366" x2="381" y2="492" stroke={SHIRT_DARK} strokeWidth="3" />
+        <path d="M364 356 L380 372 L396 356" fill="none" stroke={SHIRT_DARK} strokeWidth="3.5" />
+        {/* chest pocket */}
+        <rect x="396" y="392" width="20" height="16" rx="3" fill={SHIRT_DARK} />
+
+        {/* tool belt */}
+        <rect x="334" y="490" width="92" height="19" rx="5" fill={YELLOW} />
+        <rect x="368" y="492" width="18" height="15" rx="3" fill={YELLOW_DEEP} />
+        <rect x="342" y="509" width="27" height="27" rx="5" fill={INK} />
+        <rect x="392" y="509" width="25" height="31" rx="5" fill="#1c1c1c" />
+
+        {/* right arm (viewer's right) — relaxed, held clear of the body */}
+        <path d="M414 374 L444 434" stroke={SHIRT_DARK} strokeWidth="27" />
+        <path d="M444 434 L443 492" stroke={SKIN} strokeWidth="21" />
+        <circle cx="443" cy="500" r="11.5" fill={SKIN} />
+
+        {/* left arm — bent, holding the hammer up */}
+        <path d="M348 374 L320 428" stroke={SHIRT_DARK} strokeWidth="27" />
+        <path d="M320 428 L297 378" stroke={SKIN} strokeWidth="21" />
+
+        {/* ---- hammer ---- */}
+        <g>
+          {/* handle */}
+          <rect x="289" y="330" width="14" height="86" rx="6" fill={WOOD} />
+          <rect x="289" y="386" width="14" height="30" rx="6" fill={WOOD_DARK} />
+          {/* head */}
+          <path
+            d="M288 316 C275 313 265 320 260 330 C266 335 273 334 277 329 C280 325 284 322 288 324 Z"
+            fill={STEEL}
+          />
+          <rect x="284" y="312" width="36" height="21" rx="4" fill={STEEL} />
+          <rect x="284" y="312" width="36" height="7" rx="3" fill={STEEL_LIGHT} />
+          <rect x="311" y="308" width="13" height="29" rx="4" fill="#5f6772" />
+        </g>
+        {/* hand gripping the handle, drawn over it */}
+        <circle cx="296" cy="372" r="11.5" fill={SKIN} />
+        <path d="M289 368 h15" stroke={SKIN_SHADE} strokeWidth="2.5" />
+
+        {/* ---- head ---- */}
+        <rect x="367" y="332" width="26" height="24" rx="9" fill={SKIN_SHADE} />
+        <circle cx="380" cy="308" r="35" fill={SKIN} />
+        {/* ear */}
+        <circle cx="346" cy="312" r="7" fill={SKIN_SHADE} />
+        {/* hair showing under the cap */}
+        <path d="M347 300 C348 288 358 280 380 280 C402 280 412 288 413 300 C400 293 360 293 347 300 Z" fill="#2b2b2b" />
+        {/* face */}
+        <circle cx="369" cy="308" r="3.4" fill={INK} />
+        <circle cx="393" cy="308" r="3.4" fill={INK} />
+        <path d="M363 300 q6 -4 12 -1" fill="none" stroke={INK} strokeWidth="2.6" />
+        <path d="M387 299 q6 -3 12 1" fill="none" stroke={INK} strokeWidth="2.6" />
+        <path d="M370 322 q10 8 20 0" fill="none" stroke={INK} strokeWidth="2.8" />
+
+        {/* cap */}
+        <path d="M344 292 C344 264 362 252 380 252 C398 252 416 264 416 292 C396 284 364 284 344 292 Z" fill={YELLOW} />
+        <path d="M344 292 C338 292 332 295 330 300 C340 305 352 302 358 297 Z" fill={YELLOW_DEEP} />
+        <path d="M348 276 C356 268 404 268 412 276" fill="none" stroke={YELLOW_DEEP} strokeWidth="3" />
       </g>
     </svg>
   );
