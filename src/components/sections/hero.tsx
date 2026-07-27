@@ -22,31 +22,32 @@ export function Hero() {
   const { openContactModal } = useContactModal();
 
   return (
-    <section id="home" className="relative overflow-hidden">
-      {/* ---- photo: bleeds off the right edge on desktop ----------------
-           Starts at the fixed header's bottom edge (70px tall + 1px border)
-           so the nav always sits on clean white, and runs to the bottom of
-           the section. Sized so the frame stays close to the shot's own
-           proportions — stretching it across the full width cropped the
-           shelf and tools away and blew the toolbox up. The wash only covers
-           the photo's left edge, so it blends in without fading the tools. */}
-      <div
-        aria-hidden
-        className="absolute right-0 bottom-0 top-[71px] hidden w-[58%] xl:w-[62%] lg:block"
-      >
+    <section id="home" className="relative flex flex-col overflow-hidden">
+      {/* ---- photo ------------------------------------------------------
+           One element for every breakpoint, so the browser downloads the
+           shot once. On desktop it becomes a panel pinned to the right,
+           starting at the fixed header's bottom edge (70px + 1px border) so
+           the nav stays on clean white, and running to the bottom of the
+           section. Below lg it drops into the flow directly under the copy,
+           closing the hero off instead of floating away from it. */}
+      <div className="relative order-2 aspect-[4/3] w-full sm:aspect-[2/1] lg:absolute lg:bottom-0 lg:right-0 lg:top-[71px] lg:order-none lg:aspect-auto lg:w-[58%] xl:w-[62%]">
         <Image
           src="/hero.jpg"
-          alt=""
+          alt="HandyCore toolbox, drill, level and hand tools laid out in a bright home"
           fill
           priority
-          sizes="62vw"
+          sizes="(min-width: 1024px) 62vw, 100vw"
           className="object-cover object-right"
         />
-        <div className="absolute inset-y-0 left-0 w-[24%] bg-gradient-to-r from-paper to-transparent" />
+        {/* blends the photo's left edge into the page behind the copy */}
+        <div
+          aria-hidden
+          className="absolute inset-y-0 left-0 hidden w-[24%] bg-gradient-to-r from-paper to-transparent lg:block"
+        />
       </div>
 
-      <Container className="relative">
-        <div className="flex min-h-[100svh] flex-col justify-center pt-28 pb-16 lg:min-h-[92svh] lg:pt-32">
+      <Container className="relative order-1 lg:order-none">
+        <div className="flex flex-col justify-center pt-24 pb-8 lg:min-h-svh lg:pt-32 lg:pb-16">
           <motion.div
             variants={container}
             initial="hidden"
@@ -126,23 +127,6 @@ export function Hero() {
           </motion.div>
         </div>
       </Container>
-
-      {/* ---- photo: stacked under the copy on phones and tablets ---- */}
-      <motion.div
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-        className="relative -mt-6 aspect-[3/2] w-full lg:hidden"
-      >
-        <Image
-          src="/hero.jpg"
-          alt="HandyCore toolbox, drill, level and hand tools laid out in a bright home"
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover"
-        />
-      </motion.div>
     </section>
   );
 }
