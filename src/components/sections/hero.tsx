@@ -24,13 +24,15 @@ export function Hero() {
   return (
     <section id="home" className="relative overflow-hidden">
       {/* ---- photo: bleeds off the right edge on desktop ----------------
-           Sized so the frame stays close to the shot's own proportions —
-           stretching it across the full width cropped the shelf and tools
-           away and blew the toolbox up. The wash only covers the photo's
-           left edge, so it blends into the page without fading the tools. */}
+           Starts at the fixed header's bottom edge (70px tall + 1px border)
+           so the nav always sits on clean white, and runs to the bottom of
+           the section. Sized so the frame stays close to the shot's own
+           proportions — stretching it across the full width cropped the
+           shelf and tools away and blew the toolbox up. The wash only covers
+           the photo's left edge, so it blends in without fading the tools. */}
       <div
         aria-hidden
-        className="absolute inset-y-0 right-0 hidden w-[58%] xl:w-[62%] lg:block"
+        className="absolute right-0 bottom-0 top-[71px] hidden w-[58%] xl:w-[62%] lg:block"
       >
         <Image
           src="/hero.jpg"
