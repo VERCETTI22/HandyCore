@@ -47,7 +47,9 @@ export function Hero() {
       </div>
 
       <Container className="relative order-1 lg:order-none">
-        <div className="flex flex-col justify-center pt-24 pb-8 lg:min-h-svh lg:pt-32 lg:pb-16">
+        {/* no bottom padding below lg: the photo butts straight up against the
+            trust cards so the hero reads as one block, not a stray band */}
+        <div className="flex flex-col justify-center pt-24 pb-0 lg:min-h-svh lg:pt-32 lg:pb-16">
           <motion.div
             variants={container}
             initial="hidden"
