@@ -3,8 +3,17 @@
 import * as React from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowLeft, X, Mail, Phone, ArrowUpRight } from "lucide-react";
+import {
+  ArrowLeft,
+  X,
+  Mail,
+  Phone,
+  ArrowUpRight,
+  ArrowRight,
+  ClipboardList,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useOrder } from "@/components/order/order-context";
 import { business } from "@/lib/content";
 
 const FOCUSABLE =
@@ -82,6 +91,7 @@ export function ContactModalButton({
 function ContactModal({ open, onClose }: { open: boolean; onClose: () => void }) {
   const panelRef = React.useRef<HTMLDivElement>(null);
   const lastFocused = React.useRef<HTMLElement | null>(null);
+  const { openCustom } = useOrder();
 
   // move focus in on open, restore it on close
   React.useEffect(() => {
@@ -188,17 +198,50 @@ function ContactModal({ open, onClose }: { open: boolean; onClose: () => void })
                 </button>
               </div>
 
-              {/* two equal cards */}
-              <div className="mt-4 grid gap-4 sm:grid-cols-2">
+              {/* primary route — hand off to the full order flow */}
+              <button
+                type="button"
+                onClick={() => {
+                  onClose();
+                  // let this panel finish fading out before the order flow takes
+                  // over, so the two dialogs never overlap on screen
+                  window.setTimeout(openCustom, 220);
+                }}
+                className="group mt-2 flex w-full items-center gap-4 rounded-2xl bg-brand p-5 text-left shadow-brand transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:bg-brand-600"
+              >
+                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-ink text-brand">
+                  <ClipboardList className="h-6 w-6" strokeWidth={1.8} />
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="block text-lg font-extrabold text-ink sm:text-xl">
+                    Place your order online
+                  </span>
+                  <span className="mt-0.5 block text-[13px] leading-snug text-ink/70 sm:text-sm">
+                    Describe the job, add photos, pick a time.
+                  </span>
+                </span>
+                <ArrowRight className="h-5 w-5 shrink-0 text-ink transition-transform duration-300 group-hover:translate-x-1" />
+              </button>
+
+              {/* secondary routes, deliberately quieter than the button above */}
+              <div className="mt-5 flex items-center gap-3">
+                <span aria-hidden className="h-px flex-1 bg-line" />
+                <span className="text-xs font-medium text-muted">
+                  or reach us directly
+                </span>
+                <span aria-hidden className="h-px flex-1 bg-line" />
+              </div>
+
+              <div className="mt-4 grid gap-3 sm:grid-cols-2">
                 <ContactCard
                   icon={Mail}
-                  title="Get a Free Quote by Email"
+                  title="Email us"
                   value={business.email}
                   href={`mailto:${business.email}`}
                 />
                 <ContactCard
                   icon={Phone}
-                  title="Call or Message Us"
+                  title="Call or text"
                   value={business.phoneDisplay}
                   href={business.phoneHref}
                 />
@@ -226,16 +269,18 @@ function ContactCard({
   return (
     <a
       href={href}
-      className="group flex h-full flex-col rounded-2xl border border-line bg-surface p-6 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1 hover:border-brand/40 hover:bg-paper hover:shadow-lift"
+      className="group flex items-center gap-3 rounded-2xl border border-line bg-surface p-4 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-brand/40 hover:bg-paper hover:shadow-soft"
     >
-      <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-tint text-brand-700 transition-colors group-hover:bg-brand group-hover:text-ink">
-        <Icon className="h-5 w-5" strokeWidth={1.8} />
+      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-tint text-brand-700 transition-colors group-hover:bg-brand group-hover:text-ink">
+        <Icon className="h-[18px] w-[18px]" strokeWidth={1.8} />
       </span>
-      <h3 className="mt-5 text-lg font-bold text-ink">{title}</h3>
-      <span className="mt-2 flex-1 text-[15px] font-semibold break-words text-brand-700">
-        {value}
+      <span className="min-w-0 flex-1">
+        <span className="block text-[13px] font-semibold text-ink">{title}</span>
+        <span className="block truncate text-[13px] font-semibold text-brand-700">
+          {value}
+        </span>
       </span>
-      <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-ink">
+      <span className="shrink-0 text-ink">
         <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
       </span>
     </a>
