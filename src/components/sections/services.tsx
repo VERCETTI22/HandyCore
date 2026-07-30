@@ -11,7 +11,9 @@ export function Services() {
   const { openOrder, openCustom } = useOrder();
 
   return (
-    <section id="services" className="py-24 md:py-32">
+    // pt is tighter on small screens only, so this section starts just after
+    // the hero photo instead of behind a tall white gap
+    <section id="services" className="pt-14 pb-24 md:py-32">
       <Container>
         <SectionHeading
           eyebrow="Services & Pricing"

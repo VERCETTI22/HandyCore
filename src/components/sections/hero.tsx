@@ -18,6 +18,8 @@ const item: Variants = {
   show: { opacity: 1, y: 0, transition: { duration: 0.65, ease: [0.22, 1, 0.36, 1] } },
 };
 
+const STAT_ICONS = [Star, ShieldCheck, Zap];
+
 export function Hero() {
   const { openContactModal } = useContactModal();
 
@@ -28,8 +30,8 @@ export function Hero() {
            shot once. On desktop it becomes a panel pinned to the right,
            starting at the fixed header's bottom edge (70px + 1px border) so
            the nav stays on clean white, and running to the bottom of the
-           section. Below lg it drops into the flow directly under the copy,
-           closing the hero off instead of floating away from it. */}
+           section. Below lg it drops into the flow directly under the copy
+           and carries the trust chips on top of it. */}
       <div className="relative order-2 aspect-[4/3] w-full sm:aspect-[2/1] lg:absolute lg:bottom-0 lg:right-0 lg:top-[71px] lg:order-none lg:aspect-auto lg:w-[58%] xl:w-[62%]">
         <Image
           src="/hero.jpg"
@@ -44,12 +46,40 @@ export function Hero() {
           aria-hidden
           className="absolute inset-y-0 left-0 hidden w-[24%] bg-gradient-to-r from-paper to-transparent lg:block"
         />
+
+        {/* trust chips — small screens only. They sit over the empty wall on
+            the left of the shot, leaving the toolbox and tools clear. The
+            desktop cards below are hidden here, so only one set is ever
+            visible. */}
+        <ul className="absolute left-2.5 top-1/2 flex w-[40%] max-w-[160px] -translate-y-1/2 flex-col gap-2 lg:hidden">
+          {heroStats.map((stat, i) => {
+            const Icon = STAT_ICONS[i];
+            return (
+              <li
+                key={stat.label}
+                className="flex items-center gap-2 rounded-xl border border-white/60 bg-paper/85 px-2.5 py-2 shadow-soft backdrop-blur-md"
+              >
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-brand-tint text-brand-700">
+                  <Icon className="h-3.5 w-3.5" fill={i === 0 ? "currentColor" : "none"} />
+                </span>
+                <span className="min-w-0 leading-tight">
+                  <span className="block truncate text-[13px] font-extrabold text-ink">
+                    {stat.value}
+                  </span>
+                  {/* wraps rather than truncates so the label always reads in
+                      full, even at 320px */}
+                  <span className="block text-[10px] leading-[1.25] text-muted">
+                    {stat.label}
+                  </span>
+                </span>
+              </li>
+            );
+          })}
+        </ul>
       </div>
 
       <Container className="relative order-1 lg:order-none">
-        {/* no bottom padding below lg: the photo butts straight up against the
-            trust cards so the hero reads as one block, not a stray band */}
-        <div className="flex flex-col justify-center pt-24 pb-0 lg:min-h-svh lg:pt-32 lg:pb-16">
+        <div className="flex flex-col justify-center pt-24 pb-6 lg:min-h-svh lg:pt-32 lg:pb-16">
           <motion.div
             variants={container}
             initial="hidden"
@@ -101,13 +131,14 @@ export function Hero() {
               </Button>
             </motion.div>
 
-            {/* trust stats */}
+            {/* trust cards — desktop only; the chips over the photo cover
+                small screens, so the two never show at the same time. */}
             <motion.div
               variants={item}
-              className="mt-10 grid grid-cols-1 gap-3 sm:grid-cols-3"
+              className="mt-10 hidden gap-3 lg:grid lg:grid-cols-3"
             >
               {heroStats.map((stat, i) => {
-                const Icon = [Star, ShieldCheck, Zap][i];
+                const Icon = STAT_ICONS[i];
                 return (
                   <div
                     key={stat.label}
