@@ -44,6 +44,9 @@ export const metadata: Metadata = {
     locale: "en_CA",
     type: "website",
   },
+  // the apex domain 308s to www, but an explicit canonical leaves Google no
+  // room to treat the two hosts as competing duplicates
+  alternates: { canonical: "/" },
   robots: { index: true, follow: true },
   verification: {
     google: "nVUFm_IE28iQ0vRHXcex2HU7IAIQ9JeGmoREnpCnmVI",

@@ -12,6 +12,7 @@ export const metadata: Metadata = {
   title: "Privacy Policy",
   description:
     "How HandyCore collects, uses and protects your personal information, in line with Canada's PIPEDA and anti-spam (CASL) requirements.",
+  alternates: { canonical: "/privacy" },
   robots: { index: true, follow: true },
 };
 
